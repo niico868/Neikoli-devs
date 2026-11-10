@@ -1,0 +1,81 @@
+@import './fonts.css';
+@import './tokens.css';
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; }
+html {
+  background: var(--paper);
+  color: var(--ink);
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+}
+body {
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: 1.55;
+  background: var(--paper);
+  overflow-x: clip;
+}
+img, svg, video { display: block; max-width: 100%; }
+a { color: inherit; }
+a:hover { color: var(--accent); }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+::selection { background: var(--accent); color: var(--accent-ink); }
+
+.display {
+  font-family: var(--font-display);
+  font-stretch: var(--font-display-stretch);
+  font-weight: var(--font-display-weight);
+  letter-spacing: -0.01em;
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+.accent { color: var(--accent); }
+.sr-only {
+  position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+.skip-link {
+  position: fixed; left: var(--gutter); top: -100px; z-index: 100;
+  background: var(--ink); color: var(--paper); padding: .6em 1em; text-decoration: none;
+}
+.skip-link:focus { top: 1rem; }
+
+/* Lenis */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+/* Paper grain, very low opacity. Static SVG noise, no blend mode (cheap on phones). */
+.grain {
+  position: fixed; inset: -50%; z-index: 90; pointer-events: none;
+  opacity: 0.06;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Generic section shell for Phase 1 placeholders */
+.section {
+  padding: var(--section-pad) var(--gutter);
+  border-top: 1px solid var(--line);
+  position: relative;
+}
+.section__label {
+  font-size: var(--step--1); letter-spacing: .14em; text-transform: uppercase;
+  color: var(--ink-2); margin: 0 0 1.5rem;
+}
+.section__label span { color: var(--accent); }
+.section__title { font-size: var(--step-3); margin: 0 0 2rem; max-width: 16ch; }
+.wrap { max-width: 1240px; margin: 0 auto; }
+.placeholder-note {
+  display: inline-block; font-size: var(--step--1); color: var(--ink-2);
+  border: 1px dashed var(--line); padding: .3em .7em; border-radius: var(--radius);
+}
+.btn {
+  display: inline-flex; align-items: center; gap: .5em; text-decoration: none;
+  background: var(--ink); color: var(--paper); padding: .85em 1.3em; border-radius: 999px;
+  border: 0; cursor: pointer; font-weight: 600;
+  transition: background .25s var(--ease-out);
+}
+.btn:hover { background: var(--accent); color: var(--accent-ink); }

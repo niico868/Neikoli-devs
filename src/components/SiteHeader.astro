@@ -1,0 +1,30 @@
+---
+// The small top-left logo is where the hero word docks on scroll.
+---
+<header class="site-header">
+  <a href="#top" class="site-logo display" data-dock-target aria-label="Neikoli, back to top">NEIKOLI</a>
+  <nav aria-label="Main">
+    <a href="#work">Work</a>
+    <a href="#services">Services</a>
+    <a href="#contact" class="site-header__cta">Let's talk</a>
+  </nav>
+</header>
+
+<style>
+  .site-header {
+    position: fixed; inset: 0 0 auto 0; z-index: 50;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1rem var(--gutter);
+    pointer-events: none;
+  }
+  .site-header > * { pointer-events: auto; }
+  .site-logo {
+    font-size: 1.05rem; text-decoration: none; letter-spacing: 0; line-height: 1; display: block;
+    opacity: 0; /* revealed when the hero word docks */
+  }
+  :global(.reduced-motion) .site-logo, :global(html:not(.js)) .site-logo { opacity: 1; }
+  nav { display: flex; gap: clamp(.8rem, 2vw, 1.8rem); font-size: var(--step--1); font-weight: 500; }
+  nav a { text-decoration: none; }
+  .site-header__cta { color: var(--accent); }
+  @media (max-width: 520px) { nav a:not(.site-header__cta) { display: none; } }
+</style>

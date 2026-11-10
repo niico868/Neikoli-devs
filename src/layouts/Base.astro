@@ -1,0 +1,30 @@
+---
+import '../styles/global.css';
+interface Props { title?: string; description?: string }
+const {
+  title = 'Neikoli: websites and systems for businesses',
+  description = 'Nico, founder of Nexus Forge. I build websites and systems that make businesses look as good as they are.',
+} = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#f4f1ea" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <script is:inline>
+      // Set before paint so CSS can branch on it without a flash.
+      document.documentElement.classList.add('js');
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('reduced-motion');
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <slot />
+    <div class="grain" aria-hidden="true"></div>
+  </body>
+</html>

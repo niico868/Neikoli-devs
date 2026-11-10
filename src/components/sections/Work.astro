@@ -1,0 +1,44 @@
+---
+import { work } from '../../data/site';
+---
+<section id="work" class="section" aria-labelledby="work-title">
+  <div class="wrap">
+    <p class="section__label"><span>02</span> / Work</p>
+    <h2 id="work-title" class="section__title display">Selected work</h2>
+    <ul class="work" role="list">
+      {work.map((w, i) => (
+        <li class="work__item" id={w.slug === 'brussels' ? 'brussels' : undefined}>
+          <span class="work__n">{String(i + 1).padStart(2, '0')}</span>
+          <div>
+            <h3 class="work__name">{w.name}</h3>
+            <p class="work__kind">{w.kind}</p>
+          </div>
+          {w.status === 'in-progress' && <span class="badge"><i aria-hidden="true"></i>Live, in progress</span>}
+        </li>
+      ))}
+    </ul>
+    <p class="placeholder-note">Placeholder list. Screens, live embeds and case notes come in a later pass.</p>
+  </div>
+</section>
+<style>
+  .work { list-style: none; padding: 0; margin: 0 0 2rem; border-top: 1px solid var(--ink); }
+  .work__item {
+    display: grid; grid-template-columns: 3rem 1fr auto; align-items: center; gap: 1rem;
+    padding: 1.4rem 0; border-bottom: 1px solid var(--line);
+  }
+  .work__n { color: var(--ink-2); font-size: var(--step--1); }
+  .work__name { margin: 0; font-size: var(--step-1); font-weight: 600; line-height: 1.2; }
+  .work__kind { margin: .2rem 0 0; color: var(--ink-2); font-size: var(--step--1); }
+  .badge {
+    display: inline-flex; align-items: center; gap: .5em; white-space: nowrap;
+    font-size: var(--step--1); color: var(--accent); border: 1px solid currentColor;
+    border-radius: 999px; padding: .25em .75em;
+  }
+  .badge i { width: .5em; height: .5em; border-radius: 50%; background: currentColor; animation: pulse 1.6s infinite; }
+  @keyframes pulse { 50% { opacity: .25; } }
+  @media (max-width: 560px) {
+    .work__item { grid-template-columns: 2rem 1fr; }
+    .badge { grid-column: 2; justify-self: start; }
+  }
+  @media (prefers-reduced-motion: reduce) { .badge i { animation: none; } }
+</style>

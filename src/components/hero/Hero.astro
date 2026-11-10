@@ -1,0 +1,148 @@
+---
+import { HERO_CONFIG as CFG } from '../../scripts/hero/config';
+---
+<section id="top" class="hero" data-hero aria-label="Introduction">
+  <h1 class="sr-only">{CFG.word}</h1>
+  <div class="hero__stage" data-stage>
+    <canvas class="hero__fx" data-fx aria-hidden="true"></canvas>
+    <div class="hero__glow" data-glow aria-hidden="true"></div>
+
+    <!-- Static word: shown without JS and with reduced motion. JS swaps in physics letters. -->
+    <p class="hero__static display" aria-hidden="true">{CFG.word}</p>
+
+    <div class="hero__word" data-word role="group" aria-label="NEIKOLI. Each letter opens a card."></div>
+    <div class="hero__spawn" data-spawn aria-hidden="true"></div>
+
+    <div class="hero__copy">
+      <p class="hero__tagline">{CFG.tagline}</p>
+    </div>
+    <div class="hero__hint-wrap"><p class="hero__hint">{CFG.hint}</p></div>
+
+    <div class="hero__controls">
+      <div class="hero__controls-inner">
+        <button type="button" class="hero__btn" data-tilt hidden>Enable tilt</button>
+        <button type="button" class="hero__btn" data-reset>Reset</button>
+      </div>
+    </div>
+
+    <div class="hero__card" data-card role="dialog" aria-modal="false" aria-labelledby="hero-card-title" hidden>
+      <span class="hero__card-key display" data-card-key aria-hidden="true"></span>
+      <h2 id="hero-card-title" class="hero__card-title" data-card-title></h2>
+      <p class="hero__card-body" data-card-body></p>
+      <div class="hero__card-actions">
+        <a class="hero__card-link" data-card-link href="#">Go</a>
+        <button type="button" class="hero__card-close" data-card-close aria-label="Close card">Close</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { mountHero } from '../../scripts/hero/hero';
+  import { initSmoothScroll } from '../../scripts/motion';
+  initSmoothScroll();
+  mountHero(document.querySelector<HTMLElement>('[data-hero]'));
+</script>
+
+<style>
+  .hero {
+    position: relative;
+    /* 100svh of stage + the scroll distance of the stretch/dock story */
+    height: calc(100svh + 220vh);
+    /* The next section starts rising over the pinned stage while the word docks,
+       so there is no empty screen between the hero and About. */
+    margin-bottom: -60svh;
+  }
+  .hero + :global(*) { position: relative; z-index: 1; background: var(--paper); }
+  .hero__stage {
+    position: sticky; top: 0;
+    height: 100svh; width: 100%;
+    overflow: hidden;
+    user-select: none; -webkit-user-select: none;
+    background: var(--paper);
+  }
+  .hero__fx { position: absolute; inset: 0; pointer-events: none; z-index: 3; }
+  .hero__glow {
+    position: absolute; left: 0; top: 0; z-index: 0; pointer-events: none;
+    width: 360px; height: 360px; border-radius: 50%;
+    background: var(--accent); filter: blur(70px);
+    opacity: 0; visibility: hidden; will-change: transform;
+  }
+
+  .hero__static {
+    position: absolute; left: 0; right: 0; top: 44%; transform: translateY(-50%);
+    margin: 0; text-align: center; line-height: 1;
+    font-size: min(16.2vw, 34vh * 1.38);
+    letter-spacing: 0;
+  }
+  :global(.hero.is-ready) .hero__static { display: none; }
+
+  .hero__word { position: absolute; inset: 0; z-index: 2; pointer-events: none; will-change: transform; }
+  .hero__spawn { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+
+  :global(.hero .letter) {
+    position: absolute; left: 0; top: 0;
+    padding: 0; margin: 0; border: 0; background: none;
+    pointer-events: auto; cursor: grab; touch-action: none;
+    will-change: transform;
+    -webkit-tap-highlight-color: transparent;
+  }
+  :global(.hero .letter:focus-visible) { outline: 2px solid var(--accent); outline-offset: 6px; }
+  :global(.hero.is-grabbing), :global(.hero.is-grabbing .letter) { cursor: grabbing; }
+  :global(.hero .glyph) {
+    position: absolute; left: 0; display: block;
+    line-height: 1; white-space: pre; color: var(--ink);
+    transform-style: preserve-3d; backface-visibility: hidden;
+  }
+  :global(.hero .letter--typed) { pointer-events: none; }
+  :global(.hero .letter--typed .glyph) { color: var(--accent); }
+
+  .hero__copy {
+    position: absolute; left: 50%; top: 66%; z-index: 1;
+    width: min(24ch, 84vw); margin-left: calc(min(24ch, 84vw) / -2);
+    text-align: center;
+  }
+  .hero__tagline { margin: 0; font-size: var(--step-0); line-height: 1.45; font-weight: 500; }
+  .hero__hint-wrap { position: absolute; left: 0; right: 0; bottom: 12%; text-align: center; z-index: 1; }
+  .hero__hint {
+    margin: 0; font-size: var(--step--1); letter-spacing: .14em; text-transform: uppercase; color: var(--accent);
+  }
+  .hero__controls { position: absolute; right: var(--gutter); bottom: calc(1rem + env(safe-area-inset-bottom)); z-index: 4; }
+  .hero__controls-inner { display: flex; gap: 1rem; }
+  .hero__btn {
+    background: none; border: 0; padding: .6rem .2rem; cursor: pointer;
+    font-size: var(--step--1); letter-spacing: .08em; text-transform: uppercase;
+    text-decoration: underline; text-underline-offset: 4px; text-decoration-color: var(--line);
+  }
+  .hero__btn:hover { color: var(--accent); text-decoration-color: currentColor; }
+
+  /* Before the intro plays, the copy and controls wait offstage. */
+  :global(html.js:not(.reduced-motion)) .hero:not(.is-static) .hero__tagline,
+  :global(html.js:not(.reduced-motion)) .hero:not(.is-static) .hero__hint,
+  :global(html.js:not(.reduced-motion)) .hero:not(.is-static) .hero__controls-inner {
+    opacity: 0; visibility: hidden; transform: translateY(14px);
+  }
+
+  .hero__card {
+    position: absolute; left: 0; top: 0; z-index: 5;
+    width: min(300px, calc(100vw - 32px));
+    background: var(--ink); color: var(--paper);
+    padding: 1.3rem 1.3rem 1.1rem; border-radius: 6px;
+    box-shadow: 0 18px 40px -18px rgba(17, 17, 17, .5);
+    transform-style: preserve-3d; backface-visibility: hidden;
+    user-select: text;
+  }
+  .hero__card-key { font-size: 2.2rem; line-height: 1; color: var(--accent); display: block; margin-bottom: .6rem; }
+  .hero__card-title { margin: 0 0 .35rem; font-size: var(--step-1); line-height: 1.2; }
+  .hero__card-body { margin: 0 0 1rem; font-size: var(--step--1); opacity: .8; }
+  .hero__card-actions { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+  .hero__card-link { color: var(--paper); font-weight: 600; text-underline-offset: 4px; text-decoration-color: var(--accent); }
+  .hero__card-link:hover { color: #fff; }
+  .hero__card-close { background: none; border: 0; color: var(--paper); opacity: .6; cursor: pointer; font-size: var(--step--1); }
+  .hero__card-close:hover { opacity: 1; }
+
+  /* Static hero: no JS or prefers-reduced-motion. One screen, no scroll story. */
+  :global(html:not(.js)) .hero, :global(html.reduced-motion) .hero, :global(.hero.is-static) { height: 100svh; margin-bottom: 0; }
+  :global(html:not(.js)) .hero__controls, :global(html.reduced-motion) .hero__controls, :global(.hero.is-static) .hero__controls,
+  :global(html:not(.js)) .hero__hint-wrap, :global(html.reduced-motion) .hero__hint-wrap, :global(.hero.is-static) .hero__hint-wrap { display: none; }
+</style>

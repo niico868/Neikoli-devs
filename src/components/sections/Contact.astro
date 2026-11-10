@@ -1,0 +1,23 @@
+<section id="contact" class="section" aria-labelledby="contact-title">
+  <div class="wrap">
+    <p class="section__label"><span>05</span> / Contact</p>
+    <h2 id="contact-title" class="section__title display">Three doors<span class="accent">.</span></h2>
+    <div class="doors">
+      <div class="door"><span class="door__n">1</span><h3>Ask the assistant</h3><p>Neikoli's assistant answers questions, suggests a package and passes you to Nico.</p><p class="placeholder-note">Phase 3</p></div>
+      <div class="door"><span class="door__n">2</span><h3>Message a human</h3><p>Goes straight to Nico's dashboard.</p><p class="placeholder-note">Phase 3</p></div>
+      <div class="door"><span class="door__n">3</span><h3>Book a call</h3><p>Pick a time that suits you.</p><p class="placeholder-note">Phase 3 (Cal.com)</p></div>
+    </div>
+  </div>
+</section>
+<footer class="foot">
+  <span>© {new Date().getFullYear()} Neikoli · Nexus Forge</span>
+  <a href="#top">Back to top</a>
+</footer>
+<style>
+  .doors { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; }
+  .door { border-top: 2px solid var(--ink); padding-top: 1.2rem; }
+  .door__n { font-family: var(--font-display); font-stretch: var(--font-display-stretch); font-weight: 900; color: var(--accent); }
+  .door h3 { margin: .4rem 0; font-size: var(--step-1); }
+  .door p { margin: 0 0 .8rem; color: var(--ink-2); }
+  .foot { display: flex; justify-content: space-between; padding: 2rem var(--gutter); font-size: var(--step--1); color: var(--ink-2); border-top: 1px solid var(--line); }
+</style>

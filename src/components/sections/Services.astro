@@ -1,0 +1,38 @@
+---
+import { packages, carePlans, usd, ttd } from '../../data/site';
+---
+<section id="services" class="section" aria-labelledby="services-title">
+  <div class="wrap">
+    <p class="section__label"><span>04</span> / Services and pricing</p>
+    <h2 id="services-title" class="section__title display">Prices, out in the open</h2>
+    <div class="pkgs">
+      {packages.map((p) => (
+        <article class="pkg">
+          <h3>{p.name}</h3>
+          <p class="pkg__price">{usd(p.price)}<small> USD</small></p>
+          <p>{p.blurb}</p>
+        </article>
+      ))}
+    </div>
+    <h3 class="sub">Monthly care plans</h3>
+    <ul class="care" role="list">
+      {carePlans.map((c) => (
+        <li><strong>{c.name}</strong><span>{ttd(c.ttd)}/mo</span><p>{c.blurb}</p></li>
+      ))}
+    </ul>
+    <p class="placeholder-note">Package details and add-ons table come once package contents are final.</p>
+  </div>
+</section>
+<style>
+  .pkgs { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin-bottom: 3rem; }
+  .pkg { border: 1px solid var(--ink); padding: 1.6rem; border-radius: var(--radius); }
+  .pkg h3 { margin: 0; font-size: var(--step-0); text-transform: uppercase; letter-spacing: .12em; }
+  .pkg__price { font-size: var(--step-2); font-weight: 700; margin: .6rem 0; }
+  .pkg__price small { font-size: var(--step--1); color: var(--ink-2); font-weight: 400; }
+  .pkg p:last-child { margin: 0; color: var(--ink-2); }
+  .sub { font-size: var(--step-1); margin: 0 0 1rem; }
+  .care { list-style: none; padding: 0; margin: 0 0 2rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+  .care li { background: var(--paper-2); padding: 1.2rem; border-radius: var(--radius); display: grid; gap: .2rem; }
+  .care span { color: var(--accent); font-weight: 600; }
+  .care p { margin: .4rem 0 0; font-size: var(--step--1); color: var(--ink-2); }
+</style>
