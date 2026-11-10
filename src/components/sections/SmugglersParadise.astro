@@ -1,19 +1,65 @@
-<section id="smugglers-paradise" class="section sp" aria-labelledby="sp-title">
-  <div class="wrap">
-    <p class="section__label"><span>03</span> / Case study</p>
-    <h2 id="sp-title" class="section__title display">Smuggler's Paradise</h2>
-    <div class="sp__grid">
-      <div class="sp__cell"><h3>Designs</h3><p>Placeholder</p></div>
-      <div class="sp__cell"><h3>Content</h3><p>Placeholder</p></div>
-      <div class="sp__cell"><h3>Ethos</h3><p>Placeholder</p></div>
-      <div class="sp__cell"><h3>Story</h3><p>Placeholder</p></div>
+---
+import KineticTitle from '../KineticTitle.astro';
+const panels = [
+  { key: 'Designs', line: 'The graphics, garments and marks that made the brand.', todo: 'Add design images' },
+  { key: 'Content', line: 'Photo, video and social work that carried it.', todo: 'Add content pieces' },
+  { key: 'Ethos', line: 'What the brand stands for, in its own words.', todo: 'Add the ethos statement' },
+  { key: 'Story', line: 'How it started and where it is going.', todo: 'Add the brand story' },
+];
+---
+<section id="smugglers-paradise" class="sp" aria-labelledby="sp-title" data-sp>
+  <div class="sp__pin" data-sp-pin>
+    <div class="sp__head">
+      <p class="section__label sp__label"><span>03</span> / Case study</p>
+      <KineticTitle id="sp-title" text="Smuggler's Paradise" mode="wave" class="sp__title" />
     </div>
-    <p class="placeholder-note">The most energetic section of the page. Motion and content come in a later pass.</p>
+    <div class="sp__marquee" aria-hidden="true" data-sp-marquee>
+      <div class="sp__marquee-track display">
+        {Array.from({ length: 6 }, () => <span>Designs <i>✦</i> Content <i>✦</i> Ethos <i>✦</i> Story <i>✦</i></span>)}
+      </div>
+    </div>
+    <div class="sp__track" data-sp-track>
+      {panels.map((p, i) => (
+        <article class="sp__panel" data-sp-panel>
+          <span class="sp__num">{String(i + 1).padStart(2, '0')} / 04</span>
+          <h3 class="sp__key display" data-sp-key>{p.key}</h3>
+          <p class="sp__line">{p.line}</p>
+          <div class="sp__slot"><span>{p.todo}</span></div>
+        </article>
+      ))}
+    </div>
   </div>
 </section>
 <style>
-  .sp__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); margin-bottom: 2rem; }
-  .sp__cell { background: var(--paper); padding: 2rem 1.4rem; min-height: 12rem; }
-  .sp__cell h3 { margin: 0 0 .4rem; font-size: var(--step-1); }
-  .sp__cell p { margin: 0; color: var(--ink-2); }
+  .sp {
+    position: relative; background: var(--ink); color: var(--paper);
+    overflow: hidden;
+  }
+  .sp__pin { min-height: 100svh; display: flex; flex-direction: column; justify-content: center; gap: clamp(1rem, 3vh, 2rem); padding: 5rem 0 3rem; }
+  .sp__head { padding: 0 var(--gutter); }
+  .sp__label { color: rgba(244, 241, 234, .6); }
+  :global(.sp__title) { font-size: clamp(2.2rem, 7.5vw, 7.5rem); line-height: .95; }
+  :global(.sp__title .kt__ch:nth-child(odd)) { color: var(--paper); }
+  .sp__marquee { overflow: hidden; border-block: 1px solid rgba(244, 241, 234, .2); padding: .5rem 0; }
+  .sp__marquee-track { display: flex; width: max-content; gap: 2rem; font-size: clamp(1rem, 2.2vw, 1.6rem); color: var(--accent); white-space: nowrap; will-change: transform; }
+  .sp__marquee-track span { display: inline-flex; gap: 2rem; }
+  .sp__marquee-track i { font-style: normal; color: var(--paper); }
+  .sp__track { display: flex; gap: clamp(1rem, 2vw, 2rem); padding: 0 var(--gutter); width: max-content; will-change: transform; }
+  .sp__panel {
+    width: min(78vw, 560px); flex: none;
+    border: 1px solid rgba(244, 241, 234, .25); border-radius: 6px;
+    padding: clamp(1.2rem, 2.5vw, 2rem); display: grid; gap: .8rem; align-content: start;
+    background: rgba(244, 241, 234, .03);
+  }
+  .sp__num { font-size: var(--step--1); letter-spacing: .14em; color: rgba(244, 241, 234, .55); font-variant-numeric: tabular-nums; }
+  .sp__key { margin: 0; font-size: clamp(2.2rem, 6vw, 4.8rem); color: var(--paper); transform-origin: 0 100%; }
+  .sp__line { margin: 0; color: rgba(244, 241, 234, .75); max-width: 36ch; }
+  .sp__slot {
+    aspect-ratio: 4 / 3; max-width: 100%; border: 1px dashed rgba(244, 241, 234, .3); border-radius: 4px;
+    display: grid; place-items: center; text-align: center; padding: 1rem;
+    font-size: var(--step--1); color: rgba(244, 241, 234, .5);
+  }
+  /* Without motion the panels simply wrap. */
+  :global(html.reduced-motion) .sp__track, :global(html:not(.js)) .sp__track { width: auto; flex-wrap: wrap; }
+  :global(html.reduced-motion) .sp__panel, :global(html:not(.js)) .sp__panel { width: min(100%, 520px); }
 </style>

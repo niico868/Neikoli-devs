@@ -19,3 +19,10 @@ import Contact from '../components/sections/Contact.astro';
     <Contact />
   </main>
 </Base>
+
+<script>
+  import { initSmoothScroll } from '../scripts/motion';
+  import { initSections } from '../scripts/sections';
+  initSmoothScroll();
+  initSections();
+</script>

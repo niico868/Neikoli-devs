@@ -1,0 +1,30 @@
+---
+/**
+ * A display headline split into letters for scroll-driven kinetic type.
+ * mode: 'stretch' (letters widen then settle), 'snap' (letters fly in and snap together),
+ *       'wave' (letters ripple with scroll speed).
+ * Screen readers get the plain text; the letters are aria-hidden.
+ */
+interface Props { text: string; as?: 'h2' | 'h3' | 'p'; mode?: 'stretch' | 'snap' | 'wave'; class?: string; id?: string; accentLast?: boolean }
+const { text, as: Tag = 'h2', mode = 'stretch', class: cls = '', id, accentLast = false } = Astro.props;
+const words = text.split(' ');
+---
+<Tag class:list={['kt', 'display', cls]} data-kinetic={mode} id={id}>
+  <span class="sr-only">{text}</span>
+  <span class="kt__inner" aria-hidden="true">
+    {words.map((w, wi) => (
+      <span class="kt__word">
+        {[...w].map((c, ci) => (
+          <span class:list={['kt__ch', { accent: accentLast && wi === words.length - 1 && ci === w.length - 1 }]}>{c}</span>
+        ))}
+      </span>
+    ))}
+  </span>
+</Tag>
+<style>
+  .kt { margin: 0; }
+  .kt__inner { display: inline; }
+  .kt__word { display: inline-block; white-space: nowrap; margin-right: .28em; }
+  .kt__word:last-child { margin-right: 0; }
+  .kt__ch { display: inline-block; transform-origin: 50% 100%; will-change: transform; }
+</style>

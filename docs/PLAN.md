@@ -24,6 +24,7 @@ neikoli/
 │  ├─ components/
 │  │  ├─ SiteHeader.astro    fixed header; its logo is the hero's dock target
 │  │  ├─ hero/Hero.astro     hero markup + styles (static fallback word included)
+│  │  ├─ KineticTitle.astro  headline split into letters for kinetic type
 │  │  └─ sections/           About, Work, SmugglersParadise, Services, Contact (placeholders)
 │  ├─ scripts/
 │  │  ├─ motion.ts           Lenis smooth scroll wired to GSAP's ticker + ScrollTrigger
@@ -32,7 +33,10 @@ neikoli/
 │  │     ├─ hero.ts          physics, drag/throw, cursor field, typing, tilt, reset, scroll story
 │  │     ├─ layout.ts        font metrics, word layout, glyph sampling for the intro
 │  │     ├─ fx.ts            canvas for the red fragments (intro + celebration burst)
-│  │     └─ reveal.ts        double-tap flip card
+│  │     ├─ reveal.ts        double-tap flip card
+│  │     ├─ keepy.ts         keepy-uppy game on the O (ball, kicks, counter, high score board)
+│  │     └─ scores.ts        top-10 score store (local now, Supabase in Phase 2)
+│  │  sections.ts            scroll motion for the sections below the hero
 │  ├─ data/site.ts           work list, packages, care plans
 │  └─ styles/                tokens.css (colours/type/space), fonts.css, global.css
 └─ docs/PLAN.md              this file
@@ -45,11 +49,12 @@ neikoli/
 - Typed characters fall in as red letters (cap 40, oldest fade). Typing `hire`, `work` or `hello` fires a burst and scrolls to `#contact`.
 - Scroll story (pinned stage, 220vh): letters stretch and split, tagline rises through the gap, letters snap back, shrink and dock exactly onto the header logo. The next section rises over the stage so there is no blank screen.
 - Physics stops the moment scrolling starts and whenever the hero is off screen.
+- Keepy-uppy: a single tap on the O drops a soccer ball (a double tap still opens the O card). Hold the mouse button or a finger under the ball to kick it up; each kick pops the counter. When the ball hits the floor, a high score board opens bottom right with the top 10 only, and a top-10 score asks for initials. The ball passes in front of the letters so it can't get stuck on them. Scores are saved in the visitor's browser for now; Phase 2 moves them to a Supabase `game_scores` table queried with `limit 10`, which makes the board shared by everyone.
 - `prefers-reduced-motion` and no-JS both get the static word with the tagline, a one-screen hero, and no smooth scroll.
 
 ## Phases (from the brief)
 
-1. **Phase 1, public site** ← now. 1a scaffold + hero (done, awaiting approval). 1b real content and motion for About, Work, Smuggler's Paradise, Services, Contact, building intensity down the page.
+1. **Phase 1, public site**. 1a scaffold + hero (approved). 1a+ keepy-uppy game (done). 1b real content and motion for About, Work, Smuggler's Paradise, Services, Contact, building intensity down the page (done, awaiting approval). Still needed from Nico: project screenshots, Smuggler's Paradise designs/content/ethos/story, the Brussels Apparel build URL, a photo for About.
 2. **Phase 2, backend**: Supabase tables (leads, messages, bookings, projects, invoices, page_views) with RLS on every table; Cloudflare adapter.
 3. **Phase 3, contact**: message form → dashboard, Cal.com embed + webhook, then the chatbot (Neikoli's assistant).
 4. **Phase 4, dashboard**: `/dashboard` behind Supabase login.
@@ -86,3 +91,15 @@ To test on a phone on the same Wi-Fi: `npm run dev -- --host`, then open the pri
 - Physics uses a fixed 60Hz step with sleeping bodies, and does not run while scrolling or off screen.
 - The cursor glow (a blurred circle) is desktop-only. The grain is a static SVG with no blend mode.
 - Hero JS is ~83 KB gzipped (Matter.js + GSAP + Lenis). It could be cut later by lazy-loading Matter on first interaction.
+
+## Section motion (Phase 1b), calm to energetic
+
+| Section | Motion |
+|---|---|
+| About | Headline letters start stretched and spread, then settle; copy fades up |
+| Work | Headline letters fly in and snap together; rows slide in from alternating sides |
+| Smuggler's Paradise | Dark section, pinned horizontal run through Designs / Content / Ethos / Story; title letters ripple with scroll speed; panel titles skew and stretch with speed; marquee races and flips direction |
+| Services | Headline snaps in; package prices count up; cards rise |
+| Contact | Huge "Let's talk." ripples with scroll speed; doors rise |
+
+Reduced motion turns all of it off (the pinned run becomes wrapped panels). Measured ~59fps through the pinned section on a Pixel 7 profile at 4x CPU slowdown.

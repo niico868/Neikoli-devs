@@ -1,11 +1,26 @@
-<section id="contact" class="section" aria-labelledby="contact-title">
+---
+import KineticTitle from '../KineticTitle.astro';
+const doors = [
+  { n: '1', title: 'Ask the assistant', body: "Neikoli's assistant answers questions about services and prices, suggests a package and can pass you to me.", cta: 'Chat now', soon: 'Arrives in Phase 3' },
+  { n: '2', title: 'Message me', body: 'Write to me directly. It lands straight in my dashboard and I reply myself.', cta: 'Write a message', soon: 'Arrives in Phase 3' },
+  { n: '3', title: 'Book a call', body: 'Pick a time that suits you for a short call about your project.', cta: 'Pick a time', soon: 'Cal.com booking, Phase 3' },
+];
+---
+<section id="contact" class="section contact" aria-labelledby="contact-title">
   <div class="wrap">
     <p class="section__label"><span>05</span> / Contact</p>
-    <h2 id="contact-title" class="section__title display">Three doors<span class="accent">.</span></h2>
+    <KineticTitle id="contact-title" text="Let's talk." mode="wave" class="contact__title" accentLast />
+    <p class="contact__intro">Three ways in. Pick whichever suits you and you'll get a response straight away.</p>
     <div class="doors">
-      <div class="door"><span class="door__n">1</span><h3>Ask the assistant</h3><p>Neikoli's assistant answers questions, suggests a package and passes you to Nico.</p><p class="placeholder-note">Phase 3</p></div>
-      <div class="door"><span class="door__n">2</span><h3>Message a human</h3><p>Goes straight to Nico's dashboard.</p><p class="placeholder-note">Phase 3</p></div>
-      <div class="door"><span class="door__n">3</span><h3>Book a call</h3><p>Pick a time that suits you.</p><p class="placeholder-note">Phase 3 (Cal.com)</p></div>
+      {doors.map((d) => (
+        <article class="door" data-door>
+          <span class="door__n display">{d.n}</span>
+          <h3>{d.title}</h3>
+          <p>{d.body}</p>
+          <button type="button" class="btn" disabled aria-describedby={`door-soon-${d.n}`}>{d.cta}</button>
+          <p class="door__soon" id={`door-soon-${d.n}`}>{d.soon}</p>
+        </article>
+      ))}
     </div>
   </div>
 </section>
@@ -14,10 +29,15 @@
   <a href="#top">Back to top</a>
 </footer>
 <style>
-  .doors { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; }
-  .door { border-top: 2px solid var(--ink); padding-top: 1.2rem; }
-  .door__n { font-family: var(--font-display); font-stretch: var(--font-display-stretch); font-weight: 900; color: var(--accent); }
-  .door h3 { margin: .4rem 0; font-size: var(--step-1); }
-  .door p { margin: 0 0 .8rem; color: var(--ink-2); }
-  .foot { display: flex; justify-content: space-between; padding: 2rem var(--gutter); font-size: var(--step--1); color: var(--ink-2); border-top: 1px solid var(--line); }
+  :global(.contact__title) { font-size: clamp(3rem, 12vw, 11rem); line-height: .9; }
+  .contact__intro { color: var(--ink-2); max-width: 48ch; margin: 1.5rem 0 3rem; font-size: var(--step-1); line-height: 1.4; }
+  .doors { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 1rem; }
+  .door { border-top: 3px solid var(--ink); padding-top: 1.2rem; display: grid; gap: .6rem; align-content: start; }
+  .door__n { font-size: 2.4rem; line-height: 1; color: var(--accent); }
+  .door h3 { margin: 0; font-size: var(--step-1); }
+  .door p { margin: 0; color: var(--ink-2); }
+  .door .btn { justify-self: start; margin-top: .4rem; }
+  .door .btn:disabled { opacity: .45; cursor: not-allowed; background: var(--ink); color: var(--paper); }
+  .door__soon { font-size: var(--step--1); }
+  .foot { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; padding: 2rem var(--gutter); font-size: var(--step--1); color: var(--ink-2); border-top: 1px solid var(--line); }
 </style>

@@ -1,44 +1,72 @@
 ---
+import KineticTitle from '../KineticTitle.astro';
 import { work } from '../../data/site';
 ---
-<section id="work" class="section" aria-labelledby="work-title">
+<section id="work" class="section work" aria-labelledby="work-title">
   <div class="wrap">
     <p class="section__label"><span>02</span> / Work</p>
-    <h2 id="work-title" class="section__title display">Selected work</h2>
-    <ul class="work" role="list">
+    <KineticTitle id="work-title" text="Selected work" mode="snap" class="work__title" />
+    <ul class="work__list" role="list">
       {work.map((w, i) => (
-        <li class="work__item" id={w.slug === 'brussels' ? 'brussels' : undefined}>
+        <li class="work__item" id={w.slug === 'brussels' ? 'brussels' : undefined} data-work-row>
           <span class="work__n">{String(i + 1).padStart(2, '0')}</span>
-          <div>
+          <div class="work__main">
             <h3 class="work__name">{w.name}</h3>
-            <p class="work__kind">{w.kind}</p>
+            <p class="work__summary">{w.summary}</p>
+            <ul class="work__tags" role="list">{w.tags.map((t) => <li>{t}</li>)}</ul>
           </div>
-          {w.status === 'in-progress' && <span class="badge"><i aria-hidden="true"></i>Live, in progress</span>}
+          <div class="work__side">
+            <span class="work__kind">{w.kind}</span>
+            {w.status === 'in-progress' && <span class="badge"><i aria-hidden="true"></i>Live, in progress</span>}
+          </div>
+          {w.status === 'in-progress' && (
+            <div class="work__live">
+              {w.liveUrl
+                ? <div class="browser"><div class="browser__bar"><span></span><span></span><span></span><em>{w.liveUrl}</em></div><iframe src={w.liveUrl} title={`${w.name} live build`} loading="lazy"></iframe></div>
+                : <div class="browser browser--empty"><div class="browser__bar"><span></span><span></span><span></span><em>brussels-apparel (build link to come)</em></div><p>The live build appears here once its preview link is added in <code>src/data/site.ts</code>.</p></div>}
+            </div>
+          )}
         </li>
       ))}
     </ul>
-    <p class="placeholder-note">Placeholder list. Screens, live embeds and case notes come in a later pass.</p>
+    <p class="placeholder-note">Screens and case notes for each project come with your images.</p>
   </div>
 </section>
 <style>
-  .work { list-style: none; padding: 0; margin: 0 0 2rem; border-top: 1px solid var(--ink); }
+  :global(.work__title) { font-size: var(--step-3); margin-bottom: 2.5rem; }
+  .work__list { list-style: none; padding: 0; margin: 0 0 2rem; border-top: 2px solid var(--ink); }
   .work__item {
-    display: grid; grid-template-columns: 3rem 1fr auto; align-items: center; gap: 1rem;
-    padding: 1.4rem 0; border-bottom: 1px solid var(--line);
+    display: grid; grid-template-columns: 3rem minmax(0, 1fr) auto; gap: 1rem 1.5rem; align-items: start;
+    padding: 1.8rem 0; border-bottom: 1px solid var(--line);
+    transition: background .4s var(--ease-out);
   }
-  .work__n { color: var(--ink-2); font-size: var(--step--1); }
-  .work__name { margin: 0; font-size: var(--step-1); font-weight: 600; line-height: 1.2; }
-  .work__kind { margin: .2rem 0 0; color: var(--ink-2); font-size: var(--step--1); }
+  .work__item:hover { background: var(--paper-2); }
+  .work__n { color: var(--accent); font-size: var(--step--1); font-weight: 600; padding-top: .5rem; font-variant-numeric: tabular-nums; }
+  .work__name { margin: 0; font-size: var(--step-2); font-weight: 700; line-height: 1.1; letter-spacing: -0.01em; }
+  .work__summary { margin: .5rem 0 .8rem; color: var(--ink-2); max-width: 52ch; }
+  .work__tags { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: .4rem; }
+  .work__tags li { font-size: var(--step--1); border: 1px solid var(--line); border-radius: 999px; padding: .15em .7em; }
+  .work__side { display: grid; justify-items: end; gap: .6rem; padding-top: .5rem; }
+  .work__kind { font-size: var(--step--1); color: var(--ink-2); text-align: right; }
   .badge {
     display: inline-flex; align-items: center; gap: .5em; white-space: nowrap;
     font-size: var(--step--1); color: var(--accent); border: 1px solid currentColor;
-    border-radius: 999px; padding: .25em .75em;
+    border-radius: 999px; padding: .25em .75em; font-weight: 600;
   }
   .badge i { width: .5em; height: .5em; border-radius: 50%; background: currentColor; animation: pulse 1.6s infinite; }
   @keyframes pulse { 50% { opacity: .25; } }
-  @media (max-width: 560px) {
-    .work__item { grid-template-columns: 2rem 1fr; }
-    .badge { grid-column: 2; justify-self: start; }
+  .work__live { grid-column: 2 / -1; }
+  .browser { border: 1.5px solid var(--ink); border-radius: 8px; overflow: hidden; background: #fff; }
+  .browser__bar { display: flex; align-items: center; gap: .35rem; padding: .5rem .7rem; border-bottom: 1px solid var(--line); background: var(--paper-2); }
+  .browser__bar span { width: .55rem; height: .55rem; border-radius: 50%; background: var(--line); }
+  .browser__bar em { font-style: normal; font-size: var(--step--1); color: var(--ink-2); margin-left: .5rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .browser iframe { width: 100%; aspect-ratio: 16 / 9; border: 0; display: block; }
+  .browser--empty p { margin: 0; padding: 2.5rem 1.2rem; text-align: center; color: var(--ink-2); font-size: var(--step--1); }
+  @media (max-width: 640px) {
+    .work__item { grid-template-columns: 2rem minmax(0, 1fr); }
+    .work__side { grid-column: 2; justify-items: start; }
+    .work__kind { text-align: left; }
+    .work__live { grid-column: 1 / -1; }
   }
   @media (prefers-reduced-motion: reduce) { .badge i { animation: none; } }
 </style>
