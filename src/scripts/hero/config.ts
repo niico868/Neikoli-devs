@@ -70,6 +70,21 @@ export const HERO_CONFIG = {
     spreadVw: 0.24,          // peak gap opened in the middle of the word (share of vw, min 240px)
   },
 
+  // Keepy-uppy: single click/tap on the O drops a ball. Hold the pointer (mouse
+  // button or finger) under it to kick it back up. Ball touching the floor ends the game.
+  game: {
+    letterIndex: 4,          // which letter starts the game (4 = the O)
+    ballSize: { desktop: 84, mobile: 62 },  // diameter in px
+    kickHeight: 0.48,        // a kick lifts the ball about this share of the screen height
+    kickSideways: 7,         // max sideways speed from an off-centre kick
+    footReach: 26,           // px around the ball edge that counts as touching it
+    kickCooldownMs: 160,
+    restitution: 0.55,
+    maxScores: 10,           // only the top 10 are kept and shown
+    storageKey: 'neikoli:keepy-uppy:v1',
+    hint: 'Hold under the ball to kick it up',
+  },
+
   // Double-click / double-tap a letter to flip it and reveal a card.
   // One entry per letter, in order. Edit freely.
   reveals: [

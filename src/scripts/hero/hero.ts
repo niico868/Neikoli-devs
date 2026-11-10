@@ -4,10 +4,13 @@ import { HERO_CONFIG as CFG } from './config';
 import { ensureFonts, layoutWord, measureAdvances, sampleGlyph, type WordLayout } from './layout';
 import { Fx } from './fx';
 import { RevealCard } from './reveal';
+import { KeepyUppy } from './keepy';
 
 const { Engine, Bodies, Body, Composite, Constraint, Events, Sleeping } = Matter;
 const STEP = 1000 / 60;
 const TAU = Math.PI * 2;
+/** Letters and typed characters. The keepy-uppy ball passes in front of these. */
+export const LETTER_CATEGORY = 0x0002;
 
 type State = 'home' | 'loose' | 'returning';
 
@@ -36,6 +39,8 @@ export class Hero {
   private spawnEl: HTMLElement;
   private fx: Fx;
   private card: RevealCard;
+  private game!: KeepyUppy;
+  private tapTimer = 0;
 
   private engine = Engine.create({ enableSleeping: true });
   private walls: Matter.Body[] = [];
@@ -83,6 +88,7 @@ export class Hero {
     this.buildScroll();
     new IntersectionObserver(([e]) => { this.inView = e.isIntersecting; }).observe(this.root);
     this.root.querySelector('[data-reset]')!.addEventListener('click', () => this.reset());
+    this.game = new KeepyUppy({ engine: this.engine, stage: this.stage, size: () => ({ W: this.W, H: this.H }) }, this.root);
 
     gsap.ticker.add(this.tick);
     await this.intro();
@@ -103,7 +109,7 @@ export class Hero {
       el.type = 'button';
       el.className = 'letter';
       const reveal = CFG.reveals[i];
-      el.setAttribute('aria-label', `${box.char}: ${reveal?.title ?? ''}. Opens a card.`);
+      el.setAttribute('aria-label', `${box.char}: ${reveal?.title ?? ''}. Opens a card.${i === CFG.game.letterIndex ? ' Tap once with a mouse or finger to play keepy-uppy.' : ''}`);
       const glyph = document.createElement('span');
       glyph.className = 'glyph display';
       glyph.setAttribute('aria-hidden', 'true');
@@ -148,6 +154,7 @@ export class Hero {
       restitution: P.restitution, friction: P.friction, frictionAir: P.frictionAir, density: P.density,
       chamfer: { radius: Math.min(w, h) * 0.06 },
       sleepThreshold: 90,
+      collisionFilter: { category: LETTER_CATEGORY },
     });
     if (isStatic) Body.setStatic(b, true);
     return b;
@@ -172,6 +179,7 @@ export class Hero {
     // Ignore the phone address bar sliding in and out.
     if (this.W === prevW && Math.abs(this.H - prevH) < 140) return;
     this.card.close(false, true);
+    this.game.park();
     this.endDrag();
     this.layout = layoutWord(CFG, this.W, this.H);
     this.letters.forEach((it) => this.sizeLetter(it));
@@ -244,12 +252,14 @@ export class Hero {
     } else if (parked) {
       // Scrolling takes over: bring every letter home quickly and stop the physics.
       if (this.drag) this.endDrag();
+      if (this.game.busy) this.game.park();
       for (const it of this.letters) if (it.state === 'loose') this.returnHome(it, 500, 'power3.out');
     }
 
     this.computeOffsets();
     for (const it of this.letters) this.render(it);
     if (!parked) for (const it of this.typed) this.render(it);
+    this.game.update();
   };
 
   /** Scroll stretch: letters widen and the word splits around a gap between NEI and KOLI. */
@@ -331,7 +341,7 @@ export class Hero {
         if (!it) continue;
         if (speed > 2) it.squash = Math.min(0.16, speed * 0.012);
         // A fast hit knocks a resting letter loose.
-        if (it.index >= 0 && it.state === 'home' && !other.isStatic && speed > CFG.physics.knockLooseSpeed) {
+        if (it.index >= 0 && it.state === 'home' && !other.isStatic && !this.game?.isBall(other) && speed > CFG.physics.knockLooseSpeed) {
           this.releaseQueue.add(it);
           this.touch();
         }
@@ -424,8 +434,19 @@ export class Hero {
         Body.setVelocity(it.body, { x: v.x * k, y: v.y * k });
       } else if (ev.type === 'pointerup') {
         const now = performance.now();
-        if (this.lastTap?.item === it && now - this.lastTap.t < 340) { this.lastTap = null; this.openReveal(it); }
-        else this.lastTap = { item: it, t: now };
+        if (this.lastTap?.item === it && now - this.lastTap.t < 340) {
+          this.lastTap = null; clearTimeout(this.tapTimer); this.openReveal(it);
+        } else {
+          const tap = { item: it, t: now };
+          this.lastTap = tap;
+          // A single tap on the game letter (the O) drops a ball, once we know it is not a double tap.
+          if (it.index === CFG.game.letterIndex) {
+            clearTimeout(this.tapTimer);
+            this.tapTimer = window.setTimeout(() => {
+              if (this.lastTap === tap && this.scrollP <= 0.015) { this.lastTap = null; this.game.start(it.body.position.x); }
+            }, 340);
+          }
+        }
       }
       this.touch();
     };
@@ -561,6 +582,7 @@ export class Hero {
 
   private reset() {
     this.card.close(false, true);
+    this.game.park();
     this.endDrag();
     [...this.typed].forEach((it) => this.removeTyped(it));
     this.engine.gravity.x = 0;

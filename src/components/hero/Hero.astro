@@ -25,6 +25,27 @@ import { HERO_CONFIG as CFG } from '../../scripts/hero/config';
       </div>
     </div>
 
+    <!-- Keepy-uppy (tap the O) -->
+    <div class="kick-foot" data-kick-foot aria-hidden="true" hidden></div>
+    <div class="kick-counter" data-kick-count hidden><span class="kick-counter__n display" data-kick-n>0</span><span class="kick-counter__label">kicks</span></div>
+    <p class="kick-hint" data-kick-hint hidden></p>
+    <aside class="hs" data-hs aria-labelledby="hs-title" hidden>
+      <div class="hs__head">
+        <h2 id="hs-title" class="hs__title">High scores</h2>
+        <button type="button" class="hs__close" data-hs-close>Close</button>
+      </div>
+      <p class="hs__last" data-hs-last aria-live="polite"></p>
+      <form class="hs__form" data-hs-form hidden>
+        <label for="hs-name">Your initials</label>
+        <div class="hs__row">
+          <input id="hs-name" name="initials" maxlength="3" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="ABC" />
+          <button type="submit">Save</button>
+        </div>
+      </form>
+      <ol class="hs__list" data-hs-list></ol>
+      <p class="hs__again">Tap the O to play again.</p>
+    </aside>
+
     <div class="hero__card" data-card role="dialog" aria-modal="false" aria-labelledby="hero-card-title" hidden>
       <span class="hero__card-key display" data-card-key aria-hidden="true"></span>
       <h2 id="hero-card-title" class="hero__card-title" data-card-title></h2>
@@ -140,6 +161,70 @@ import { HERO_CONFIG as CFG } from '../../scripts/hero/config';
   .hero__card-link:hover { color: #fff; }
   .hero__card-close { background: none; border: 0; color: var(--paper); opacity: .6; cursor: pointer; font-size: var(--step--1); }
   .hero__card-close:hover { opacity: 1; }
+
+  /* ---------- Keepy-uppy ---------- */
+  :global(.hero.is-playing) .hero__stage { touch-action: none; cursor: crosshair; }
+  :global(.kick-ball) {
+    position: absolute; left: 0; top: 0; z-index: 3; pointer-events: none; will-change: transform;
+    filter: drop-shadow(0 6px 6px rgba(17, 17, 17, .18));
+  }
+  :global(.kick-ball svg) { display: block; }
+  .kick-foot {
+    position: absolute; left: -22px; top: -22px; z-index: 3; pointer-events: none;
+    width: 44px; height: 44px; border-radius: 50%;
+    border: 2px solid var(--accent); background: rgba(139, 15, 20, .08);
+  }
+  .kick-counter {
+    position: absolute; left: 0; right: 0; top: clamp(4.5rem, 14vh, 8rem); z-index: 4;
+    display: flex; flex-direction: column; align-items: center; pointer-events: none;
+  }
+  .kick-counter__n {
+    display: block; color: var(--accent); line-height: 1;
+    font-size: clamp(3.2rem, 9vw, 7rem); font-variant-numeric: tabular-nums;
+  }
+  .kick-counter__label { font-size: var(--step--1); letter-spacing: .16em; text-transform: uppercase; color: var(--ink-2); }
+  .kick-hint {
+    position: absolute; left: 0; right: 0; bottom: 22%; z-index: 4; margin: 0; text-align: center; pointer-events: none;
+    font-size: var(--step--1); letter-spacing: .14em; text-transform: uppercase; color: var(--ink);
+  }
+  .hs {
+    position: absolute; z-index: 6;
+    right: calc(var(--gutter) + env(safe-area-inset-right, 0px));
+    bottom: calc(3.6rem + env(safe-area-inset-bottom, 0px));
+    width: min(280px, calc(100vw - 32px));
+    max-height: calc(100svh - 9rem); overflow: auto;
+    background: var(--paper); border: 1.5px solid var(--ink); border-radius: 6px;
+    padding: 1rem 1.1rem 1.1rem;
+    box-shadow: 6px 6px 0 var(--ink);
+    user-select: text;
+  }
+  .hs__head { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
+  .hs__title { margin: 0; font-size: var(--step--1); letter-spacing: .16em; text-transform: uppercase; }
+  .hs__close { background: none; border: 0; padding: .3rem 0; cursor: pointer; font-size: var(--step--1); color: var(--ink-2); }
+  .hs__close:hover { color: var(--accent); }
+  .hs__last { margin: .5rem 0 .8rem; font-size: var(--step--1); color: var(--ink-2); }
+  .hs__form { display: grid; gap: .35rem; margin-bottom: .9rem; font-size: var(--step--1); }
+  .hs__row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .5rem; }
+  .hs__row input {
+    width: 100%; min-width: 0; font: inherit; font-weight: 700; letter-spacing: .3em; text-transform: uppercase;
+    padding: .5rem .6rem; border: 1.5px solid var(--ink); border-radius: 4px; background: #fff; color: var(--ink);
+  }
+  .hs__row button {
+    font-weight: 600; padding: .5rem .9rem; border: 0; border-radius: 4px; cursor: pointer;
+    background: var(--accent); color: var(--accent-ink);
+  }
+  .hs__list { list-style: none; margin: 0; padding: 0; display: grid; gap: .1rem; font-variant-numeric: tabular-nums; }
+  :global(.hs__list li) {
+    display: grid; grid-template-columns: 2rem 1fr auto; gap: .5rem; align-items: baseline;
+    padding: .28rem .35rem; border-radius: 3px; font-size: var(--step--1);
+  }
+  :global(.hs__list li.is-you) { background: var(--accent); color: var(--accent-ink); }
+  :global(.hs__list li.is-you .hs__rank) { color: inherit; }
+  :global(.hs__list .hs__empty) { display: block; color: var(--ink-2); }
+  :global(.hs__rank) { color: var(--ink-2); }
+  :global(.hs__name) { font-weight: 700; letter-spacing: .12em; }
+  :global(.hs__pts) { font-weight: 700; }
+  .hs__again { margin: .8rem 0 0; font-size: var(--step--1); color: var(--accent); }
 
   /* Static hero: no JS or prefers-reduced-motion. One screen, no scroll story. */
   :global(html:not(.js)) .hero, :global(html.reduced-motion) .hero, :global(.hero.is-static) { height: 100svh; margin-bottom: 0; }
