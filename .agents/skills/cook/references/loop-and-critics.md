@@ -1,5 +1,7 @@
 # Loop and critics
 
+> **Pro plan budget applies:** see SKILL.md. No parallel fix subagents, at most 1 critic per round from round 3, 2h / 4 rounds cap. Pacing advice below about long runs and many subagents does not apply in this repo.
+
 ## The harness, before round 1
 
 Build these once so every round is cheap to check:

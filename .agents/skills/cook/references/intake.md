@@ -19,7 +19,7 @@ Number the questions and ask only the open ones.
 | 1 | What are we building, in one sentence, and in which stack? | Required. If the user has no idea yet, see "No idea yet". |
 | 2 | Where are the references? Recreate them closely, or match their quality in an own style? | The attached files. Recreate closely. |
 | 3 | What is the bar? | 99.9% similarity per dimension for stills. For video, the references count as about 8.5/10 and the target is at least 9/10. |
-| 4 | How much time: a floor or a hard cap? | Demo or visual build: a floor of 8h. Small job: a hard cap of 1.5h. |
+| 4 | How much time: a hard cap (Pro plan budget)? | Hard cap of 2h / 4 rounds (max). Small job: 1h. No floors. |
 | 5 | Hard rules: assets, sound, extra bans, things that must appear? | Zero external assets. Code-made sound only if it truly holds up, otherwise licensed free audio with credits. The default slop ban list. |
 | 6 | What is the deliverable? | Approved stills, then a video of about 1 minute, 1080p 30fps, no text on screen, licensed music. |
 | 7 | What hardware renders it? | A weak integrated GPU: realtime kept cheap, quality from offline rendering. |
@@ -56,7 +56,7 @@ References: cook/refs/R01 to R[NN], [recreate closely / same quality, own style]
 Bar: composition [99.9], light [99.9], color [99.9], materials [99.9], detail near and far [99.9], motion [9/10].
 Calibration offset: [none yet].
 Rules: [assets]. [sound]. Extra bans: [list]. Must include: [list].
-Time: [floor 8h / cap 1.5h]. Started: [timestamp].
+Time: [cap 2h / 4 rounds, Pro plan budget]. Started: [timestamp].
 Usage: [5h window, about 20% per hour, never 100%].
 Hardware: [GPU]. Realtime cheap, final quality offline.
 Deliverable: [approved stills, then a 1 minute video at 1080p 30fps / realtime demo / UI].

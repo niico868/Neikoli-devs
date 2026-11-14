@@ -1,15 +1,28 @@
 ---
 name: cook
-description: Runs the Cook Loop for ambitious visual builds that must match reference images, screens or videos through long autonomous iteration. Use it for 3D worlds made in code (three.js, WebGL, shaders), code-rendered films, launch and motion videos, games and polished UI that must hold up next to references, especially runs of many hours or days while the user is away. Trigger when the user types /cook or $cook, says "cook", "go cook", "let it cook", "iterate until it matches", "match the references", "99%", "99.9%", "9/10 minimum" or "at least 8h", or attaches reference images and asks for a recreation in code. It runs one intake, then loops build, stills, zero-context critics and fixes against a numeric bar, and holds the final render until the user approves.
+description: Runs the Cook Loop for ambitious visual builds that must match reference images, screens or videos through long autonomous iteration. Use it for 3D worlds made in code (three.js, WebGL, shaders), code-rendered films, launch and motion videos, games and polished UI that must hold up next to references, capped at 2 hours / 4 rounds to fit a Pro plan 5-hour window. Trigger when the user types /cook or $cook, says "cook", "go cook", "let it cook", "iterate until it matches", "match the references", "99%", "99.9%" or "9/10 minimum", or attaches reference images and asks for a recreation in code. It runs one intake, then loops build, stills, zero-context critics and fixes against a numeric bar, and holds the final render until the user approves.
 ---
 
 # Cook
 
 Give your agent a target, a bar and time, then let it cook.
 
-This skill runs the Cook Loop: one intake, then a long autonomous loop of build, render, compare, critique and fix until the work holds up next to the references. It is made for runs of 10 to 40 hours or more. The references carry the look. The brief sets the bar, the rules and the time.
+This skill runs the Cook Loop: one intake, then a long autonomous loop of build, render, compare, critique and fix until the work holds up next to the references. Upstream it is made for runs of 10 to 40 hours. **In this repo it runs under the Pro plan budget below, which overrides every longer time, floor or pacing rule in this skill and its reference files.** The references carry the look. The brief sets the bar, the rules and the time.
 
 Optional companions: /unlazy for effort and completion discipline (the Depth Tree), and any goal, loop or long-run mode the harness offers. Cook works without them.
+
+## Pro plan budget (overrides everything else)
+
+The user is on a Claude Pro plan with a 5-hour usage window. One run must fit inside one window with room to spare for normal work.
+
+- **Run cap: 2 hours wall clock and at most 4 rounds**, whichever comes first. Ignore the 8h floor and every "never stop early" instruction; there is no floor.
+- **Usage cap: aim to spend no more than about 50% of one 5h window.** You cannot read the meter, so use rounds and the clock as the proxy, and stop early if the harness warns about usage limits.
+- **Per-edit timebox: 15 minutes per fix.** If one fix is not working after 15 minutes or 2 attempts, log it as "below bar", move on, and report it.
+- **Subagents:** no parallel fix subagents. At most 1 fresh-context critic per round (skip critics entirely on rounds 1 and 2; self-check against the side-by-side instead).
+- **Renders:** max 3 stills per round, no video clips or contact sheets unless the deliverable is video. No long offline renders.
+- **Intake:** ask the user for the time cap if they want less than the default; never accept more than 2h without them restating it explicitly in that run.
+- **Stop:** when either cap is hit, finish the current round, log it in `cook/ROUNDS.md`, and report plainly what is still below the bar and what one more round would fix. Then end the turn and wait for the user.
+- Log the start time and the round count at the top of `cook/ROUNDS.md` and check both at every round boundary.
 
 ## State files
 
@@ -67,9 +80,8 @@ Defaults unless the brief says otherwise. Full rules: `references/rules.md`.
 
 ### 5. Time
 
-- Demos get a floor: at least 8h, and done after 2h means something is wrong. Big builds can take days. Small jobs get a hard cap.
+- Follow the Pro plan budget above: 2h / 4 rounds hard cap, about 50% of one 5h window, 15 minutes per fix.
 - Log the start time. Read the clock at every round boundary.
-- Pace usage: about 20% of a 5h window per hour, about 99% per window, never 100%.
 - Depth over breadth: make one shot, scene or element exceptional before you expand.
 
 ### 6. Loop
@@ -78,11 +90,11 @@ Before round 1, build the harness: a fixed camera preset per shot, a still rende
 
 Each round:
 1. Focus: open user feedback first, else the weakest dimension in the weakest shot.
-2. Fix it in depth. Split independent parts across parallel subagents.
+2. Fix it in depth, within the 15-minute timebox. No parallel subagents.
 3. Render stills from the shot presets, same framing and aspect as each reference. For motion, render contact sheets and short clips.
 4. Make side-by-side images: reference left, render right.
 5. Measure what can be measured: color per region, frame time, seconds per rendered frame.
-6. Score with fresh-context critics: subagents with zero context that get only the side-by-side images and the rubric, optionally from another model. Your own score is logged, never decisive.
+6. Score: from round 3, one fresh-context critic subagent that gets only the side-by-side images and the rubric. Earlier rounds: your own score, logged as eyeballed.
 7. Log the round in `cook/ROUNDS.md`.
 8. Send the stills to the user (Gate) and keep going.
 9. Run the Stop check. If it fails, start the next round now.
@@ -103,10 +115,10 @@ After approval, render the final deliverable and check the file. For a video on 
 
 Stop only when all of these are true:
 - Every dimension in every shot meets the bar, by critic median after calibration.
-- The time floor is reached (capped jobs have no floor).
+- (No time floor. Hitting a Pro plan budget cap also ends the run.)
 - The user approved the stills, and the final deliverable is rendered and its file checked.
 
-Done before the floor means the bar was read too low. Reread the references at full size, check far distance, color and the weakest shot, and start another round. If a hard cap or a usage stop comes first, finish the round, log it and report plainly what is still below the bar.
+If a budget cap or a usage stop comes first, finish the round, log it and report plainly what is still below the bar.
 
 ## Never
 
