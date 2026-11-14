@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "skills": {
+    "cook": {
+      "source": "Leonxlnx/cook",
+      "sourceType": "github",
+      "skillPath": "SKILL.md",
+      "computedHash": "3dcf9cf36e34e6cd71137d8480fba18ea015339608d3e2065cdc712c6a362d1a"
+    }
+  }
+}
