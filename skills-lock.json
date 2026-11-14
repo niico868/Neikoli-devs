@@ -6,6 +6,168 @@
       "sourceType": "github",
       "skillPath": "SKILL.md",
       "computedHash": "3dcf9cf36e34e6cd71137d8480fba18ea015339608d3e2065cdc712c6a362d1a"
+    },
+    "copywriter-agent": {
+      "source": "michaelboeding/skills",
+      "sourceType": "github",
+      "skillPath": "skills/copywriter-agent/SKILL.md",
+      "computedHash": "b04418eb2015ce1563b3f6dcadfa7d22a5e80cc5c14cb95c0165e780c36fce59"
+    },
+    "copywriting": {
+      "source": "agent-skills-hub/agent-skills-hub",
+      "sourceType": "github",
+      "skillPath": "skills/copywriting/SKILL.md",
+      "computedHash": "3e2ef672aff967f208d2cf08d7be14122301e31953ca3a99f3a95da1eb12ba89"
+    },
+    "design-taste-frontend": {
+      "source": "Leonxlnx/taste-skill",
+      "sourceType": "github",
+      "skillPath": "skills/taste-skill/SKILL.md",
+      "computedHash": "b10eab0a9684cd09cf34c31ef04a3bf530a5f4404422f9c520d42372d670c7fc"
+    },
+    "ecommerce-copywriting": {
+      "source": "Vos91/agent-skills",
+      "sourceType": "github",
+      "skillPath": "ecommerce-copywriting/SKILL.md",
+      "computedHash": "6572ff3499c6d30f2c6b085a18ba40f8de33a7753290f306deb785e7947bbf31"
+    },
+    "find-references": {
+      "source": "vargHQ/skills",
+      "sourceType": "github",
+      "skillPath": "find-references/SKILL.md",
+      "computedHash": "419d11d8b5297c11c986fddbb2bf4e1ee07a49b525728bdde3a1a2ee1c61bdf8"
+    },
+    "image-to-code": {
+      "source": "charlieviettq/awesome-agent-skill",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/image-to-code/SKILL.md",
+      "computedHash": "e7bd3465e66d2d49120b79b825adf5521063cfe9b0f8ef36c85640ef78ef0152"
+    },
+    "kinetic-type-art": {
+      "source": "vargHQ/skills",
+      "sourceType": "github",
+      "skillPath": "kinetic-type-art/SKILL.md",
+      "computedHash": "853eb818e17868ffe383765d39f50a13c5f4a4dd666ce0c07013032a59e88570"
+    },
+    "logo-design": {
+      "source": "atypica-ai/logo-design-skill",
+      "sourceType": "github",
+      "skillPath": "skills/logo-design/SKILL.md",
+      "computedHash": "a3338ae6c00156afdd1c4444e438e79c76643f787234819a4ebf8baeb251b760"
+    },
+    "new-website": {
+      "source": "karero/croftweaver",
+      "sourceType": "github",
+      "skillPath": "skills/new-website/SKILL.md",
+      "computedHash": "8886324b5f1b7e8067bfab3b886065573688301578abe5ad3cf01ebf1ff5e21e"
+    },
+    "og-images": {
+      "source": "karero/croftweaver",
+      "sourceType": "github",
+      "skillPath": "skills/og-images/SKILL.md",
+      "computedHash": "aa9b008f1a9aaebfefb65d1ab3ca3f045ceb176078d93a77e17e78b0adf02be3"
+    },
+    "paper-shaders": {
+      "source": "vargHQ/skills",
+      "sourceType": "github",
+      "skillPath": "paper-shaders/SKILL.md",
+      "computedHash": "ec82361e79a786c68b40f7abce1f8beeb04a449a931b89868d955447f1ad6aff"
+    },
+    "schema-markup": {
+      "source": "karero/croftweaver",
+      "sourceType": "github",
+      "skillPath": "skills/schema-markup/SKILL.md",
+      "computedHash": "f9685bb789a49fa7942131436fb4765c99793ae69bd99eae89580b2fe4d4a6c8"
+    },
+    "scroll-craft": {
+      "source": "nateherkai/scroll-craft",
+      "sourceType": "github",
+      "skillPath": "plugins/nateherk-design/skills/scroll-craft/SKILL.md",
+      "computedHash": "313906594cddf8d38d2d5cd3eda0436d7f4c912808d5255e1d579fcb8b8befaf"
+    },
+    "title-design": {
+      "source": "vargHQ/skills",
+      "sourceType": "github",
+      "skillPath": "title-design/SKILL.md",
+      "computedHash": "0b642a6aeb722c9440f631aaea51a580fd6efc0a61249ff93efb75a538586d61"
+    },
+    "transition-craft": {
+      "source": "vargHQ/skills",
+      "sourceType": "github",
+      "skillPath": "transition-craft/SKILL.md",
+      "computedHash": "567d826b92c2ef2be84351ac7e156188d5a084d6f5107303cf8c71b5d20345c6"
+    },
+    "website-brand-kit": {
+      "source": "karero/croftweaver",
+      "sourceType": "github",
+      "skillPath": "skills/website-brand-kit/SKILL.md",
+      "computedHash": "ae80e43ed4e24d11e080c634a0297246f8ac057edcd71fa277bc396eadbcc2fb"
+    },
+    "website-contact-form": {
+      "source": "karero/croftweaver",
+      "sourceType": "github",
+      "skillPath": "skills/website-contact-form/SKILL.md",
+      "computedHash": "a7750337683603443b6673f1ef2ae0f7218633132ae7070345a2bd5a368343a4"
+    },
+    "website-design-system": {
+      "source": "karero/croftweaver",
+      "sourceType": "github",
+      "skillPath": "skills/website-design-system/SKILL.md",
+      "computedHash": "3cf34a9252a05b1579193ba8379efa3c4ae6475d450d56065d02ab285fb7a333"
+    },
+    "website-launch-check": {
+      "source": "karero/croftweaver",
+      "sourceType": "github",
+      "skillPath": "skills/website-launch-check/SKILL.md",
+      "computedHash": "211c3c3b71de1ceeb02472fbdf481c17d781372594962b558d2e97b34f90a184"
+    },
+    "website-motion": {
+      "source": "karero/croftweaver",
+      "sourceType": "github",
+      "skillPath": "skills/website-motion/SKILL.md",
+      "computedHash": "68b50163e7a5d0562394c790fb44c21651671dec8bcca5746116070c9ac3ab84"
+    },
+    "website-new-page": {
+      "source": "karero/croftweaver",
+      "sourceType": "github",
+      "skillPath": "skills/website-new-page/SKILL.md",
+      "computedHash": "49cbcca1e30e6d52e6b6970784e21d32e4ab3736b540bb565d49f592e39e5e08"
+    },
+    "website-positioning": {
+      "source": "karero/croftweaver",
+      "sourceType": "github",
+      "skillPath": "skills/website-positioning/SKILL.md",
+      "computedHash": "89af4792c58a208e50abdcef49237f8f3be132ab5e76831848b5d006bda1e6e5"
+    },
+    "website-qa": {
+      "source": "karero/croftweaver",
+      "sourceType": "github",
+      "skillPath": "skills/website-qa/SKILL.md",
+      "computedHash": "2d23c59fd82e14b9f306c870406d478eb89783734ab6e467d470e443a9dbcf93"
+    },
+    "website-review": {
+      "source": "karero/croftweaver",
+      "sourceType": "github",
+      "skillPath": "skills/website-review/SKILL.md",
+      "computedHash": "cd5d01e60d6d19e29c7f0d81ba68bec800f54ca12b2a46bb6bb682bc9c1d769f"
+    },
+    "website-seo-geo": {
+      "source": "karero/croftweaver",
+      "sourceType": "github",
+      "skillPath": "skills/website-seo-geo/SKILL.md",
+      "computedHash": "e247c65b4e1b49aec81f3c813c1c3223e6c1fad47585110c53cad3bcc96842ef"
+    },
+    "website-tagline": {
+      "source": "karero/croftweaver",
+      "sourceType": "github",
+      "skillPath": "skills/website-tagline/SKILL.md",
+      "computedHash": "5694c1e58dc3eac584c0f62925f09823a363eedb1fbb062146f035c7ce1a85f7"
+    },
+    "website-testimonials": {
+      "source": "karero/croftweaver",
+      "sourceType": "github",
+      "skillPath": "skills/website-testimonials/SKILL.md",
+      "computedHash": "89126a06b1fc6c2d7cf108281775c5a08abf7cfde8b14aa4eb82a2cf943ebf4e"
     }
   }
 }
