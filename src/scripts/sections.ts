@@ -18,6 +18,7 @@ export function initSections() {
     kineticStretch();
     kineticSnap();
     workRows();
+    clientCards();
     smugglersParadise(velocity);
     kineticWave(velocity);
     services();
@@ -68,6 +69,16 @@ function kineticSnap() {
       autoAlpha: 0, ease: 'back.out(2.2)', stagger: { each: 0.02, from: 'random' },
       scrollTrigger: { trigger: title, start: 'top 92%', end: 'top 50%', scrub: 0.5 },
     });
+  });
+}
+
+/** Clients: cards rise in a quick stagger as the grid enters. */
+function clientCards() {
+  const cards = gsap.utils.toArray<HTMLElement>('[data-client]');
+  if (!cards.length) return;
+  gsap.from(cards, {
+    y: 40, autoAlpha: 0, duration: 0.9, ease: 'power3.out', stagger: 0.08,
+    scrollTrigger: { trigger: cards[0].parentElement, start: 'top 85%', once: true },
   });
 }
 

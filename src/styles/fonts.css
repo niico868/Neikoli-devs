@@ -1,16 +1,14 @@
 /*
   FONTS
   -----
-  Brand fonts are Akira Expanded (display) and Satoshi (body). Neither file is in
-  the repo yet. Until they are, the site falls back to Archivo (self-hosted via
-  @fontsource), which has a width axis: at 125% width / 900 weight it is a close
-  stand-in for Akira, and at normal width it reads close to Satoshi.
+  Brand fonts are Akira Expanded (display) and Satoshi (body/UI).
+  - Satoshi Variable (wght 300-900) is installed: /public/fonts/Satoshi-Variable.woff2.
+  - Akira Expanded is NOT installed: the file supplied so far is a Demo licence.
+    Until a commercial licence is in hand, Archivo (self-hosted via @fontsource)
+    stands in for headings at 125% width / 900 weight.
 
-  To switch to the real fonts:
-    1. Put the files in /public/fonts/  (names below, or edit the URLs).
-    2. Uncomment the two @font-face blocks.
-  Nothing else changes: --font-display and --font-body already list them first.
-  Confirm the Akira Expanded commercial licence before shipping it.
+  To switch on Akira later: put the licensed file in /public/fonts/ and uncomment
+  its @font-face block. --font-display already lists it first.
 */
 
 @import '@fontsource-variable/archivo/wdth.css';
@@ -23,12 +21,13 @@
   font-style: normal;
   font-display: block;
 }
+*/
 
 @font-face {
   font-family: 'Satoshi';
-  src: url('/fonts/Satoshi-Variable.woff2') format('woff2-variations');
+  src: url('/fonts/Satoshi-Variable.woff2') format('woff2-variations'),
+       url('/fonts/Satoshi-Variable.woff2') format('woff2');
   font-weight: 300 900;
   font-style: normal;
   font-display: swap;
 }
-*/
