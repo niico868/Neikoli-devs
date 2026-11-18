@@ -1,0 +1,102 @@
+---
+import KineticTitle from '../KineticTitle.astro';
+import { clients } from '../../data/site';
+---
+<section id="clients" class="section clients" aria-labelledby="clients-title">
+  <div class="wrap">
+    <p class="section__label"><span>03</span> / Clients</p>
+    <KineticTitle id="clients-title" text="Who I build for" mode="snap" class="clients__title" />
+    <ul class="clients__grid" role="list">
+      {clients.map((c) => (
+        <li class="client" data-client>
+          <div class:list={['client__logo', { 'client__logo--halo': c.halo }]}>
+            <img src={c.logo} alt={`${c.name} logo`} loading="lazy" decoding="async" />
+          </div>
+          <div class="client__info">
+            <h3 class="client__name">{c.name}</h3>
+            <p class="client__desc">{c.descriptor}</p>
+            {c.url
+              ? <a class="client__cta" href={c.url} target="_blank" rel="noopener">View <span aria-hidden="true">→</span><span class="sr-only"> {c.name} (opens in a new tab)</span></a>
+              : <span class="client__cta client__cta--soon">Site coming soon</span>}
+          </div>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+<style>
+  .clients {
+    --c-bg: #0d0d0d; --c-card: #161616; --c-line: #2a2a2a; --c-text: #f4f1ea; --c-text-2: #a8a39a;
+    background: var(--c-bg); color: var(--c-text); border-top-color: var(--c-bg);
+  }
+  .clients :global(.section__label) { color: var(--c-text-2); }
+  .clients :global(.section__label span) { color: #e0464c; }
+  :global(.clients__title) { font-size: var(--step-3); margin-bottom: 2.5rem; color: var(--c-text); }
+
+  /* 3-2: six columns, top three span two each, bottom two sit centred (cols 2-3 and 4-5). */
+  .clients__grid {
+    list-style: none; padding: 0; margin: clamp(1.5rem, 1rem + 2vw, 3rem) 0 0;
+    display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: clamp(.75rem, .5rem + 1vw, 1.25rem);
+  }
+  .client { grid-column: span 2; }
+  .client:nth-child(4) { grid-column: 2 / span 2; }
+  .client:nth-child(5) { grid-column: 4 / span 2; }
+
+  .client {
+    position: relative; overflow: hidden; aspect-ratio: 4 / 3;
+    background: var(--c-card); border: 1px solid var(--c-line); border-radius: 10px;
+    transition: border-color .4s var(--ease-out);
+  }
+  .client__logo {
+    position: absolute; inset: 0;
+    transition: transform .6s var(--ease-out), opacity .5s var(--ease-out), filter .5s var(--ease-out);
+  }
+  .client__logo img { position: absolute; inset: 12%; width: 76%; height: 76%; object-fit: contain; }
+  /* Nexus Forge has dark lettering: its webp carries a soft light halo baked in, and it can sit a little larger. */
+  .client__logo--halo img { inset: 4%; width: 92%; height: 92%; }
+
+  .client__info {
+    position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end; gap: .5rem;
+    padding: clamp(1rem, .7rem + 1vw, 1.6rem);
+    background: linear-gradient(to top, rgba(10,10,10,.97) 0%, rgba(10,10,10,.9) 55%, rgba(10,10,10,.55) 100%);
+    opacity: 0; transform: translateY(12px);
+    transition: opacity .45s var(--ease-out), transform .55s var(--ease-out);
+  }
+  .client__name { margin: 0; font-size: var(--step-1); font-weight: 700; line-height: 1.1; letter-spacing: -0.01em; }
+  .client__desc { margin: 0; font-size: var(--step--1); line-height: 1.45; color: var(--c-text-2); }
+  .client__cta {
+    align-self: flex-start; margin-top: .4rem; font-size: var(--step--1); font-weight: 600;
+    color: var(--c-text); text-decoration: none; border-bottom: 1px solid currentColor; padding-bottom: .1em;
+  }
+  .client__cta:hover { color: #e0464c; }
+  .client__cta--soon { color: var(--c-text-2); border-bottom-style: dashed; }
+
+  /* Reveal on hover (mouse) and on keyboard focus. */
+  @media (hover: hover) {
+    .client:hover { border-color: #3d3d3d; }
+    .client:hover .client__logo { transform: scale(.92); opacity: .18; filter: blur(2px); }
+    .client:hover .client__info { opacity: 1; transform: none; }
+  }
+  .client:focus-within .client__logo { transform: scale(.92); opacity: .18; filter: blur(2px); }
+  .client:focus-within .client__info { opacity: 1; transform: none; }
+
+  /* Touch screens have no hover: show logo on top, info underneath, always visible. */
+  @media (hover: none) {
+    .client { aspect-ratio: auto; display: flex; flex-direction: column; }
+    .client__logo { position: relative; inset: auto; aspect-ratio: 4 / 3; }
+    .client__info { position: relative; inset: auto; opacity: 1; transform: none; background: none; padding-top: 0; }
+  }
+
+  @media (max-width: 900px) {
+    .clients__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .client, .client:nth-child(4) { grid-column: span 1; }
+    .client:nth-child(5) { grid-column: 1 / -1; justify-self: center; width: calc(50% - .5rem); }
+  }
+  @media (max-width: 560px) {
+    .clients__grid { grid-template-columns: minmax(0, 1fr); }
+    .client:nth-child(5) { grid-column: auto; width: auto; justify-self: stretch; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .client__logo, .client__info { transition: none; }
+  }
+</style>

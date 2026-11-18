@@ -97,3 +97,35 @@ export const metaAds = [
 
 export const usd = (n: number) => '$' + n.toLocaleString('en-US');
 export const ttd = (n: number) => 'TT$' + n.toLocaleString('en-US');
+
+export interface Client {
+  name: string;
+  logo: string;            // path under /public
+  descriptor: string;
+  url?: string;            // leave undefined until the site is live: the card shows "Site coming soon"
+  halo?: boolean;          // logo file has a light halo baked in (dark lettering); shown slightly larger
+}
+
+/** Clients grid: first three fill the top row, last two sit centred underneath. */
+export const clients: Client[] = [
+  {
+    name: 'Nexus Forge', logo: '/images/clients/nexus-forge.webp', url: 'https://neikoli.com', halo: true,
+    descriptor: 'Where the dream took form. Years of quiet conviction — that the highest version of this work lives at the intersection of code, creativity, and freedom. Building toward a life designed entirely on its own terms.',
+  },
+  {
+    name: 'Melt Aways', logo: '/images/clients/melt-aways.webp', url: 'https://www.meltawaysspa.com',
+    descriptor: "Website paired with an elegant spa — streamlined bookings for Krystal's customers.",
+  },
+  {
+    name: 'CCGC', logo: '/images/clients/ccgc.webp', url: 'https://www.cathysgreenclassics.com',
+    descriptor: "Showcase and ordering site for Cathy's customizable menu, with loyalty points on every order.",
+  },
+  {
+    name: 'Smugglers Paradise', logo: '/images/clients/smugglers-paradise.webp', url: 'https://www.smugpara.com',
+    descriptor: 'Catalogue and storefront for custom pieces — easy product purchases and on-site customization.',
+  },
+  {
+    name: 'Bruffles x PTP', logo: '/images/clients/bruffles-ptp.webp', url: undefined, // URL TBD
+    descriptor: 'High-quality apparel and paraphernalia for Bruffles Apparel and Passport to Paradise — built to rival nike.com.',
+  },
+];
