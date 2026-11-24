@@ -91,9 +91,9 @@ export const HERO_CONFIG = {
     { title: 'About Nico', body: 'Founder of Nexus Forge. Builds websites and the systems behind them.', href: '#about', cta: 'Read the story' },
     { title: 'Experience', body: 'Sites, booking dashboards and custom builders for real businesses.', href: '#work', cta: 'See the work' },
     { title: 'Ideas lab', body: 'Experiments, prototypes and things in the oven.', href: '#smugglers-paradise', cta: 'Take a look' },
-    { title: 'Clients', body: "Cathy's Clean Green Classics, Melt Aways, Brussels Apparel and more.", href: '#work', cta: 'Meet them' },
+    { title: 'Clients', body: "Cathy's Clean Green Classics, Melt Elite Aesthetics, Bruffels × PTP and more.", href: '#work', cta: 'Meet them' },
     { title: 'Origin story', body: "It started with my mother's site, my father's and my own.", href: '#about', cta: 'How it began' },
-    { title: 'Live build: Brussels Apparel', body: 'In progress right now. Watch it come together.', href: '#brussels', cta: 'View the build' },
+    { title: 'Live build: Bruffels × PTP', body: 'In progress right now. Watch it come together.', href: '#live-build', cta: 'View the build' },
     { title: 'Inquire', body: 'Ask the assistant, message me, or book a call.', href: '#contact', cta: 'Start a project' },
   ],
 } as const;

@@ -14,24 +14,24 @@ export interface WorkItem {
 export const work: WorkItem[] = [
   {
     slug: 'cathys', name: "Cathy's Clean Green Classics", kind: 'Website',
-    summary: 'A custom site for a small business, built to look as good as the work behind it.',
-    tags: ['Design', 'Build', 'SEO setup'], status: 'live',
+    summary: 'Ordering site for made-to-order salads, homestyle meals and diabetic-friendly cold-pressed juices, with customer accounts for quick repeat orders and delivery slots built in.',
+    tags: ['Design', 'Build', 'Online ordering', 'SEO setup'], status: 'live', url: 'https://cathyscleangreenclassics.com',
   },
   {
-    slug: 'melt-aways', name: 'Melt Aways', kind: 'Salon website + dashboard app',
-    summary: 'A salon site with its own dashboard for bookings and messages.',
-    tags: ['Website', 'Dashboard', 'Bookings'], status: 'live',
+    slug: 'melt-elite', name: 'Melt Elite Aesthetics', kind: 'Clinic website + dashboard app',
+    summary: 'A consultation-first body contouring clinic in El Dorado. Clients plan treatments and book consultations online; the clinic runs bookings and messages from its own dashboard.',
+    tags: ['Website', 'Dashboard', 'Bookings'], status: 'live', url: 'https://meltawaysspa.com',
   },
   {
     slug: 'smugglers-builder', name: "Smuggler's Paradise custom builder", kind: 'Own build',
-    summary: 'A custom product builder made for my own brand.',
-    tags: ['Custom feature', 'Product builder'], status: 'live',
+    summary: 'Storefront and design studio for my own brand: shoppers build their own heavyweight tee on the site, and every piece is printed to order.',
+    tags: ['Custom feature', 'Product builder', 'Storefront'], status: 'live', url: 'https://smugpara.com/design',
   },
   {
-    slug: 'brussels', name: 'Brussels Apparel', kind: 'Website',
-    summary: 'Being built right now. The live build is visible as it comes together.',
-    tags: ['Website', 'In progress'], status: 'in-progress',
-    liveUrl: undefined, // set to the build URL to show it in a frame
+    slug: 'bruffels', name: 'Bruffels Apparel × Passport to Paradise', kind: 'Storefront',
+    summary: 'Authentic one-of-one menswear and bulk accessories under one roof. Being built right now: the live build is visible as it comes together.',
+    tags: ['Website', 'Storefront', 'In progress'], status: 'in-progress',
+    liveUrl: 'https://bruffles-apparelxptp.neikoliaugustine.workers.dev'
   },
 ];
 
@@ -113,19 +113,19 @@ export const clients: Client[] = [
     descriptor: 'Where the dream took form. Years of quiet conviction — that the highest version of this work lives at the intersection of code, creativity, and freedom. Building toward a life designed entirely on its own terms.',
   },
   {
-    name: 'Melt Aways', logo: '/images/clients/melt-aways.webp', url: 'https://www.meltawaysspa.com',
-    descriptor: "Website paired with an elegant spa — streamlined bookings for Krystal's customers.",
+    name: 'Melt Elite Aesthetics', logo: '/images/clients/melt-aways.webp', url: 'https://meltawaysspa.com',
+    descriptor: "Consultation-first body contouring in El Dorado. Clients plan treatments and book online; Krystal runs it all from her dashboard.",
   },
   {
-    name: 'CCGC', logo: '/images/clients/ccgc.webp', url: 'https://www.cathysgreenclassics.com',
-    descriptor: "Showcase and ordering site for Cathy's customizable menu, with loyalty points on every order.",
+    name: "Cathy's Clean Green Classics", logo: '/images/clients/ccgc.webp', url: 'https://cathyscleangreenclassics.com',
+    descriptor: "Ordering site for fresh salads, homestyle meals and diabetic-friendly juices, with accounts for quick repeat orders.",
   },
   {
-    name: 'Smugglers Paradise', logo: '/images/clients/smugglers-paradise.webp', url: 'https://www.smugpara.com',
-    descriptor: 'Catalogue and storefront for custom pieces — easy product purchases and on-site customization.',
+    name: "Smuggler's Paradise", logo: '/images/clients/smugglers-paradise.webp', url: 'https://smugpara.com',
+    descriptor: 'Storefront and design studio for heavyweight tees: shop the drops or design your own, printed to order.',
   },
   {
-    name: 'Bruffles x PTP', logo: '/images/clients/bruffles-ptp.webp', url: undefined, // URL TBD
-    descriptor: 'High-quality apparel and paraphernalia for Bruffles Apparel and Passport to Paradise — built to rival nike.com.',
+    name: 'Bruffels × PTP', logo: '/images/clients/bruffles-ptp.webp', url: 'https://bruffles-apparelxptp.neikoliaugustine.workers.dev',
+    descriptor: 'One-of-one menswear from Bruffels Apparel and accessories from Passport to Paradise, in one storefront. Live build in progress.',
   },
 ];
