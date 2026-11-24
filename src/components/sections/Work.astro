@@ -8,7 +8,7 @@ import { work } from '../../data/site';
     <KineticTitle id="work-title" text="Latest work" mode="snap" class="work__title" />
     <ul class="work__list" role="list">
       {work.map((w, i) => (
-        <li class="work__item" id={w.status === 'in-progress' ? 'live-build' : undefined} data-work-row>
+        <li class="work__item" id={w.status === 'in-progress' ? 'live-build' : undefined} style={`z-index:${work.length - i}`} data-work-row>
           <span class="work__n">{String(i + 1).padStart(2, '0')}</span>
           <div class="work__main">
             <h3 class="work__name">{w.url ? <a href={w.url} target="_blank" rel="noopener">{w.name} <span aria-hidden="true">↗</span></a> : w.name}</h3>

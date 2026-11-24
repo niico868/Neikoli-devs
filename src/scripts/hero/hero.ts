@@ -88,7 +88,7 @@ export class Hero {
     this.buildScroll();
     new IntersectionObserver(([e]) => { this.inView = e.isIntersecting; }).observe(this.root);
     this.root.querySelector('[data-reset]')!.addEventListener('click', () => this.reset());
-    this.game = new KeepyUppy({ engine: this.engine, stage: this.stage, size: () => ({ W: this.W, H: this.H }) }, this.root);
+    this.game = new KeepyUppy({ engine: this.engine, stage: this.stage, size: () => ({ W: this.W, H: this.H }), wordBox: () => ({ top: this.layout.top, bottom: this.layout.top + this.layout.height }) }, this.root);
 
     gsap.ticker.add(this.tick);
     await this.intro();

@@ -11,6 +11,8 @@ export interface GameHost {
   engine: Matter.Engine;
   stage: HTMLElement;
   size(): { W: number; H: number };
+  /** Where the word sits when every letter is home (stage coordinates). */
+  wordBox(): { top: number; bottom: number };
 }
 
 type Phase = 'off' | 'playing' | 'over';
@@ -31,6 +33,7 @@ export class KeepyUppy {
   private store: ScoreStore = new LocalScoreStore(G.storageKey);
   private pending: Score | null = null;
   private lastTransform = '';
+  private marker!: HTMLElement;
 
   private counter: HTMLElement;
   private counterN: HTMLElement;
@@ -61,6 +64,13 @@ export class KeepyUppy {
     this.el.innerHTML = ballSvg();
     this.el.hidden = true;
     host.stage.appendChild(this.el);
+
+    // Faint amber marker along the top edge while the ball is above the screen.
+    this.marker = document.createElement('div');
+    this.marker.className = 'kick-marker';
+    this.marker.setAttribute('aria-hidden', 'true');
+    this.marker.hidden = true;
+    host.stage.appendChild(this.marker);
 
     q('[data-hs-close]').addEventListener('click', () => this.closePanel());
     this.form.addEventListener('submit', (e) => { e.preventDefault(); this.savePending(); });
@@ -116,11 +126,8 @@ export class KeepyUppy {
    * above them if it fits, smaller if it nearly fits, otherwise below them.
    */
   private placeCounter() {
-    const stage = this.host.stage.getBoundingClientRect();
-    const letters = [...this.host.stage.querySelectorAll<HTMLElement>('.letter')].map((l) => l.getBoundingClientRect());
-    if (!letters.length) return;
-    const top = Math.min(...letters.map((r) => r.top)) - stage.top;
-    const bottom = Math.max(...letters.map((r) => r.bottom)) - stage.top;
+    // Use the word's HOME position, not where knocked letters happen to be lying.
+    const { top, bottom } = this.host.wordBox();
     const header = 64, gap = 14;
     const c = this.counter;
     c.style.scale = ''; c.style.top = '0px'; c.hidden = false;
@@ -139,8 +146,7 @@ export class KeepyUppy {
   private placeHint() {
     const stage = this.host.stage.getBoundingClientRect();
     const copy = this.host.stage.querySelector<HTMLElement>('.hero__copy')?.getBoundingClientRect();
-    const letters = [...this.host.stage.querySelectorAll<HTMLElement>('.letter')].map((l) => l.getBoundingClientRect().bottom);
-    const below = Math.max(copy && copy.height ? copy.bottom : 0, ...letters) - stage.top;
+    const below = Math.max(copy && copy.height ? copy.bottom - stage.top : 0, this.host.wordBox().bottom);
     this.hint.style.bottom = 'auto';
     this.hint.style.top = `${Math.round(below + 16)}px`;
   }
@@ -172,6 +178,15 @@ export class KeepyUppy {
       }
       if (b.position.y + this.r >= H - 1.5) this.over();
       else if (b.position.x < -this.r * 3 || b.position.x > W + this.r * 3) this.over(true);
+    }
+
+    const above = b.position.y + this.r < 0;
+    if (above !== !this.marker.hidden) this.marker.hidden = !above;
+    if (above) {
+      // Further away = smaller and fainter, like a radar blip.
+      const far = gsap.utils.clamp(0, 1, -b.position.y / H);
+      this.marker.style.transform = `translate3d(${gsap.utils.clamp(12, W - 12, b.position.x).toFixed(1)}px,0,0) scale(${(1 - far * 0.45).toFixed(2)})`;
+      this.marker.style.opacity = (0.75 - far * 0.4).toFixed(2);
     }
 
     const t = `translate3d(${(b.position.x - this.r).toFixed(1)}px,${(b.position.y - this.r).toFixed(1)}px,0) rotate(${b.angle.toFixed(3)}rad)`;
@@ -278,6 +293,7 @@ export class KeepyUppy {
   }
 
   private clearBall() {
+    if (this.marker) this.marker.hidden = true;
     if (this.ball) Composite.remove(this.host.engine.world, this.ball);
     this.ball = null;
     this.el.hidden = true;

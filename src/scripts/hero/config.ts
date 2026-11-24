@@ -79,7 +79,7 @@ export const HERO_CONFIG = {
     kickSideways: 7,         // max sideways speed from an off-centre kick
     footReach: 26,           // px around the ball edge that counts as touching it
     kickCooldownMs: 160,
-    restitution: 0.55,
+    restitution: 0.42,
     maxScores: 10,           // only the top 10 are kept and shown
     storageKey: 'neikoli:keepy-uppy:v1',
     hint: 'Move your mouse into the ball to kick it',

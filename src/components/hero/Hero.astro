@@ -175,6 +175,19 @@ import { HERO_CONFIG as CFG } from '../../scripts/hero/config';
     width: 44px; height: 44px; border-radius: 50%;
     border: 2px solid var(--accent); background: rgba(139, 15, 20, .08);
   }
+  .kick-marker {
+    position: absolute; top: 0; left: -10px; z-index: 6; width: 20px; height: 26px; pointer-events: none;
+    transform-origin: 50% 0; will-change: transform, opacity;
+  }
+  .kick-marker::before {  /* a soft amber chevron pointing up at the ball */
+    content: ''; position: absolute; left: 3px; top: 6px; width: 14px; height: 14px;
+    border-left: 3px solid #f0a020; border-top: 3px solid #f0a020; transform: rotate(45deg);
+    filter: drop-shadow(0 0 6px rgba(240, 160, 32, .7));
+  }
+  .kick-marker::after {   /* a faint glow strip along the top edge */
+    content: ''; position: absolute; left: -14px; right: -14px; top: 0; height: 3px; border-radius: 3px;
+    background: radial-gradient(closest-side, rgba(240, 160, 32, .8), transparent);
+  }
   .kick-counter {
     position: absolute; left: 0; right: 0; top: clamp(4.5rem, 14vh, 8rem); z-index: 4;
     display: flex; flex-direction: column; align-items: center; pointer-events: none;

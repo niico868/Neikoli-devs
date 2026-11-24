@@ -1,6 +1,6 @@
 ---
 import KineticTitle from '../KineticTitle.astro';
-import { packages, carePlans, addOns, metaAds, ttd } from '../../data/site';
+import { packages, carePlans, addOns, metaAdsRates, ttd } from '../../data/site';
 ---
 <section id="services" class="section services" aria-labelledby="services-title" data-cur-scope="ttd">
   <div class="wrap">
@@ -54,18 +54,35 @@ import { packages, carePlans, addOns, metaAds, ttd } from '../../data/site';
     </div>
 
     <div class="block">
-      <h3 class="block__title">Meta ads: two ways</h3>
-      <p class="block__intro">Ad spend is always billed separately and targets are agreed up front. Account setup (Business Manager, pixel, conversion tracking, audiences) is a one-time fee.</p>
-      <div class="ads">
-        {metaAds.map((m) => (
-          <article class="ad">
-            <h4>{m.name}</h4>
-            <p class="ad__price"><span class="c-ttd">{m.ttd}</span><span class="c-usd">{m.usd}</span> <small>/ month</small></p>
-            <p>{m.what}</p>
-            <p class="ad__hours">{m.hours}</p>
-          </article>
-        ))}
-      </div>
+      <h3 class="block__title">Meta ads: built around you</h3>
+      <p class="block__intro">Facebook and Instagram ads are priced on what you actually run, so there's no fixed package. Set the sliders for an estimate. Ad spend is paid to Meta separately, and account setup (Business Manager, pixel, conversion tracking, audiences) is a one-time fee.</p>
+      <form class="calc" data-calc data-rates={JSON.stringify(metaAdsRates)} onsubmit="return false">
+        <fieldset class="calc__mode">
+          <legend class="sr-only">What you need</legend>
+          <label><input type="radio" name="mode" value="manage" checked /> <span><b>Management</b><small>You supply the ads; I run them</small></span></label>
+          <label><input type="radio" name="mode" value="creative" /> <span><b>Management + creative</b><small>I make the ads too</small></span></label>
+        </fieldset>
+        <label class="calc__row">
+          <span>Ads running each week <output data-out="ads">3</output></span>
+          <input type="range" name="ads" min="1" max="15" value="3" />
+        </label>
+        <div class="calc__creative" data-creative hidden>
+          <label class="calc__row">
+            <span>New ads made each month <output data-out="per">4</output></span>
+            <input type="range" name="per" min="1" max="20" value="4" />
+          </label>
+          <label class="calc__row">
+            <span>Share that are video <output data-out="vid">50%</output></span>
+            <input type="range" name="vid" min="0" max="100" step="25" value="50" />
+          </label>
+        </div>
+        <div class="calc__total" aria-live="polite">
+          <span class="calc__label">Estimated monthly fee</span>
+          <strong data-total>—</strong>
+          <small data-breakdown></small>
+        </div>
+        <p class="calc__note">This is an estimate, not a quote. Your final price depends on goals, audiences and how much testing the account needs. Plan on ad spend of at least <span data-minspend></span> per ad set, paid directly to Meta.</p>
+      </form>
     </div>
   </div>
 </section>
@@ -113,6 +130,23 @@ import { packages, carePlans, addOns, metaAds, ttd } from '../../data/site';
   .addons td:nth-child(2) { white-space: nowrap; font-variant-numeric: tabular-nums; }
   .addons tr:last-child th, .addons tr:last-child td { border-bottom: 0; }
 
+  .calc { border: 1.5px solid var(--ink); border-radius: 10px; padding: clamp(1.1rem, 3vw, 1.8rem); display: grid; gap: 1.2rem; max-width: 720px; background: var(--paper); }
+  .calc__mode { border: 0; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: .6rem; }
+  .calc__mode label { display: flex; gap: .6rem; align-items: flex-start; border: 1px solid var(--line); border-radius: 8px; padding: .8rem; cursor: pointer; }
+  .calc__mode label:has(input:checked) { border-color: var(--ink); background: var(--paper-2); }
+  .calc__mode input { accent-color: var(--accent); margin-top: .2rem; }
+  .calc__mode b { display: block; }
+  .calc__mode small { color: var(--ink-2); font-size: var(--step--1); }
+  .calc__row { display: grid; gap: .4rem; }
+  .calc__creative:not([hidden]) { display: grid; gap: 1.2rem; }
+  .calc__row span { display: flex; justify-content: space-between; font-weight: 600; font-size: var(--step--1); }
+  .calc__row output { color: var(--accent); font-variant-numeric: tabular-nums; }
+  .calc__row input { width: 100%; accent-color: var(--accent); }
+  .calc__total { display: grid; gap: .2rem; border-top: 1px solid var(--line); padding-top: 1rem; }
+  .calc__label { font-size: .75rem; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-2); }
+  .calc__total strong { font-family: var(--font-display); font-stretch: var(--font-display-stretch); font-weight: 900; font-size: clamp(1.6rem, 4vw, 2.4rem); color: var(--accent); line-height: 1.1; }
+  .calc__total small { color: var(--ink-2); font-size: var(--step--1); }
+  .calc__note { margin: 0; font-size: var(--step--1); color: var(--ink-2); }
   .ads { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 1rem; }
   .ad { border: 1px solid var(--line); border-radius: 6px; padding: 1.3rem; }
   .ad h4 { margin: 0; font-size: var(--step-0); }
@@ -122,6 +156,34 @@ import { packages, carePlans, addOns, metaAds, ttd } from '../../data/site';
   .ad__hours { color: var(--ink-2); margin-bottom: 0 !important; }
 </style>
 <script>
+  // Meta ads estimator: management base + per running ad, plus new creative when chosen.
+  const form = document.querySelector<HTMLFormElement>('[data-calc]');
+  if (form) {
+    const R = JSON.parse(form.dataset.rates!);
+    const scopeEl = document.querySelector<HTMLElement>('#services');
+    const money = (usd: number) => scopeEl?.dataset.curScope === 'usd'
+      ? 'US$' + Math.round(usd).toLocaleString('en-US')
+      : 'TT$' + (Math.round((usd * R.usdToTtd) / 50) * 50).toLocaleString('en-US');
+    const out = (k: string) => form.querySelector<HTMLOutputElement>(`[data-out="${k}"]`)!;
+    const calc = () => {
+      const f = new FormData(form);
+      const creative = f.get('mode') === 'creative';
+      const ads = Number(f.get('ads')), per = Number(f.get('per')), vid = Number(f.get('vid')) / 100;
+      form.querySelector<HTMLElement>('[data-creative]')!.hidden = !creative;
+      out('ads').value = String(ads); out('per').value = String(per); out('vid').value = Math.round(vid * 100) + '%';
+      const manage = R.managementBase + R.perActiveAd * ads;
+      const make = creative ? per * (R.creative.image * (1 - vid) + R.creative.video * vid) : 0;
+      form.querySelector('[data-total]')!.textContent = money(manage + make) + ' / month';
+      form.querySelector('[data-breakdown]')!.textContent = creative
+        ? `Management ${money(manage)} + creative ${money(make)}`
+        : `Management for ${ads} running ad${ads === 1 ? '' : 's'}`;
+      form.querySelector('[data-minspend]')!.textContent = money(R.minSpendPerDayUsd) + ' a day';
+    };
+    form.addEventListener('input', calc);
+    document.querySelectorAll('[data-cur-btn]').forEach((b) => b.addEventListener('click', () => requestAnimationFrame(calc)));
+    calc();
+  }
+
   // TTD by default; the switch flips every add-on and Meta ads price to USD.
   const scope = document.querySelector<HTMLElement>('#services');
   document.querySelectorAll<HTMLButtonElement>('[data-cur-btn]').forEach((b) => b.addEventListener('click', () => {

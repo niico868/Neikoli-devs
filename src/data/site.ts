@@ -90,10 +90,18 @@ export const addOns = [
   { name: 'Analytics and strategy call', usd: '$150', ttd: 'TT$1,000', what: 'Monthly report plus a 30-minute call on what to do next' },
 ];
 
-export const metaAds = [
-  { name: 'Ads management only', usd: 'from $300', ttd: 'from TT$2,000', hours: '5 to 8 hours a month', what: 'Campaign setup, audience and offer testing, daily checks, weekly budget tweaks, monthly report. You supply the images, videos and copy.' },
-  { name: 'Ads management plus creative', usd: 'from $500', ttd: 'from TT$3,400', hours: '8 to 15 hours a month', what: 'Everything above, plus 3 to 6 new ads a month: images, video (including AI video) and copy.' },
-];
+/**
+ * Meta ads estimator. Rates follow common small-business agency pricing (2025–26):
+ * a monthly management base, a small fee per ad kept running (testing, daily checks,
+ * budget moves), and a per-piece fee for new creative. All in USD; TTD at the add-on rate.
+ */
+export const metaAdsRates = {
+  usdToTtd: 6.8,
+  managementBase: 250,       // setup of the month's campaigns, reporting, strategy
+  perActiveAd: 35,           // per ad running each week: monitoring, testing, budget tweaks
+  creative: { image: 45, video: 120 },  // per new ad, including copy (video includes AI video)
+  minSpendPerDayUsd: 5,      // suggested minimum ad spend per ad set, billed by Meta
+};
 
 export const usd = (n: number) => '$' + n.toLocaleString('en-US');
 export const ttd = (n: number) => 'TT$' + n.toLocaleString('en-US');

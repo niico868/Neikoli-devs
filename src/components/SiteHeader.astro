@@ -17,7 +17,43 @@
     padding: 1rem var(--gutter);
     pointer-events: none;
   }
-  .site-header > * { pointer-events: auto; }
+  .site-header > * { pointer-events: auto; position: relative; z-index: 1; }
+
+  /*
+   * The glass holder. Invisible over the hero; once the page scrolls past it, a frosted
+   * "stained glass" bar fades in behind the links. Content sliding under it is blurred ~75%
+   * and tinted with soft panes of colour, like light through a church window.
+   */
+  .site-header::before {
+    content: ''; position: absolute; inset: .45rem calc(var(--gutter) * .5); border-radius: 18px;
+    background:
+      radial-gradient(120% 140% at 8% 0%, rgba(166, 25, 35, .10), transparent 45%),
+      radial-gradient(90% 160% at 62% 120%, rgba(240, 160, 32, .09), transparent 50%),
+      radial-gradient(80% 140% at 96% 10%, rgba(40, 90, 160, .08), transparent 50%),
+      linear-gradient(115deg, rgba(255,255,255,.08) 0 18%, transparent 18% 19%, rgba(255,255,255,.05) 19% 46%, transparent 46% 47%, rgba(255,255,255,.07) 47% 78%, transparent 78% 79%, rgba(255,255,255,.04) 79%),
+      color-mix(in srgb, var(--paper) 62%, transparent);
+    -webkit-backdrop-filter: blur(22px) saturate(170%) contrast(.92);
+    backdrop-filter: blur(22px) saturate(170%) contrast(.92);
+    border: 1px solid rgba(255, 255, 255, .45);
+    box-shadow: 0 10px 30px -18px rgba(0, 0, 0, .35), inset 0 1px 0 rgba(255, 255, 255, .5);
+    opacity: 0; transform: translateY(-6px) scale(.98);
+    transition: opacity .45s ease, transform .45s cubic-bezier(.2, .8, .2, 1);
+    pointer-events: none;
+  }
+  .site-header.has-glass::before { opacity: 1; transform: none; }
+  /* Over dark sections the glass goes smoky instead of milky. */
+  .site-header.has-glass.glass-dark::before {
+    background:
+      radial-gradient(120% 140% at 8% 0%, rgba(224, 70, 76, .16), transparent 45%),
+      radial-gradient(90% 160% at 62% 120%, rgba(240, 160, 32, .10), transparent 50%),
+      linear-gradient(115deg, rgba(255,255,255,.05) 0 18%, transparent 18% 19%, rgba(255,255,255,.03) 19% 46%, transparent 46% 47%, rgba(255,255,255,.04) 47%),
+      rgba(16, 16, 16, .55);
+    border-color: rgba(255, 255, 255, .12);
+  }
+  /* Out of the way while reading down the page; back as soon as it's needed. */
+  .site-header { transition: transform .45s cubic-bezier(.2, .8, .2, 1); }
+  .site-header.is-tucked { transform: translateY(calc(-100% - 8px)); }
+  @media (prefers-reduced-motion: reduce) { .site-header, .site-header::before { transition: none; } }
   .site-logo {
     font-size: 1.05rem; text-decoration: none; letter-spacing: 0; line-height: 1; display: flex; gap: .32em; white-space: nowrap;
   }
@@ -60,8 +96,35 @@
       el.classList.toggle('on-dark', !!bg && isDark(bg));
     }
     header.style.visibility = '';
+    // With the glass showing, the glass decides: smoky glass gets light text, milky glass dark text.
+    if (header.classList.contains('has-glass')) {
+      const darkCount = items.filter((el) => el.classList.contains('on-dark')).length;
+      const smoky = darkCount > items.length / 2;
+      header.classList.toggle('glass-dark', smoky);
+      items.forEach((el) => el.classList.toggle('on-dark', smoky));
+    }
   };
   const queue = () => { if (!queued) { queued = true; requestAnimationFrame(check); } };
+  // Visibility: no holder over the hero; past it, tuck away while scrolling down,
+  // come back on scroll up, after a short pause, and near the contact section.
+  const hero = document.querySelector<HTMLElement>('#top');
+  const contact = document.querySelector<HTMLElement>('#contact');
+  let lastY = scrollY, idle = 0;
+  const visibility = () => {
+    const y = scrollY;
+    const pastHero = !hero || y > hero.offsetTop + hero.offsetHeight - 80;
+    header.classList.toggle('has-glass', pastHero);
+    const nearContact = !!contact && contact.getBoundingClientRect().top < innerHeight * 0.6;
+    const down = y > lastY + 4, up = y < lastY - 4;
+    if (!pastHero || up || nearContact) header.classList.remove('is-tucked');
+    else if (down && y > 200) header.classList.add('is-tucked');
+    lastY = y;
+    clearTimeout(idle);
+    idle = window.setTimeout(() => header.classList.remove('is-tucked'), 1200);
+  };
+  addEventListener('scroll', () => { queue(); visibility(); }, { passive: true });
+  header.addEventListener('focusin', () => header.classList.remove('is-tucked'));
+  visibility();
   addEventListener('scroll', queue, { passive: true });
   addEventListener('resize', queue);
   queue();
