@@ -99,6 +99,8 @@ export class KeepyUppy {
 
     this.count = 0;
     this.counterN.textContent = '0';
+    this.placeCounter();
+    this.placeHint();
     this.phase = 'playing';
     this.root.classList.add('is-playing');
     this.el.hidden = false;
@@ -107,6 +109,40 @@ export class KeepyUppy {
     gsap.fromTo(this.counter, { autoAlpha: 0, y: -10 }, { autoAlpha: 1, y: 0, duration: 0.35 });
     this.hint.hidden = false;
     gsap.fromTo(this.hint, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.35 });
+  }
+
+  /**
+   * Keep the kick counter clear of the NEIKOLI letters at any screen size:
+   * above them if it fits, smaller if it nearly fits, otherwise below them.
+   */
+  private placeCounter() {
+    const stage = this.host.stage.getBoundingClientRect();
+    const letters = [...this.host.stage.querySelectorAll<HTMLElement>('.letter')].map((l) => l.getBoundingClientRect());
+    if (!letters.length) return;
+    const top = Math.min(...letters.map((r) => r.top)) - stage.top;
+    const bottom = Math.max(...letters.map((r) => r.bottom)) - stage.top;
+    const header = 64, gap = 14;
+    const c = this.counter;
+    c.style.scale = ''; c.style.top = '0px'; c.hidden = false;
+    const h = c.getBoundingClientRect().height;
+    const room = top - gap - header;
+    if (room >= h) { c.style.top = `${top - gap - h}px`; return; }
+    if (room >= h * 0.55) {
+      const s = room / h;
+      c.style.top = `${header}px`; c.style.transformOrigin = '50% 0'; c.style.scale = s.toFixed(3);
+      return;
+    }
+    c.style.top = `${bottom + gap}px`;
+  }
+
+  /** The hint sits just under the tagline (or the letters), never on top of either. */
+  private placeHint() {
+    const stage = this.host.stage.getBoundingClientRect();
+    const copy = this.host.stage.querySelector<HTMLElement>('.hero__copy')?.getBoundingClientRect();
+    const letters = [...this.host.stage.querySelectorAll<HTMLElement>('.letter')].map((l) => l.getBoundingClientRect().bottom);
+    const below = Math.max(copy && copy.height ? copy.bottom : 0, ...letters) - stage.top;
+    this.hint.style.bottom = 'auto';
+    this.hint.style.top = `${Math.round(below + 16)}px`;
   }
 
   /** Called once per frame after the physics steps. */
@@ -124,6 +160,15 @@ export class KeepyUppy {
         const speed = Math.hypot(f.vx, f.vy);
         // A slow foot has to be under the ball; a fast swipe hits it from any side.
         if (touching && (dy < this.r * 0.35 || speed > G.swipeMinSpeed)) this.kick(dx, H);
+      }
+      // Side walls: the ball bounces back unless it was hit very hard.
+      const vx = b.velocity.x;
+      if ((b.position.x < this.r && vx < 0) || (b.position.x > W - this.r && vx > 0)) {
+        if (Math.abs(vx) < G.wallBreakSpeed) {
+          Body.setPosition(b, { x: gsap.utils.clamp(this.r, W - this.r, b.position.x), y: b.position.y });
+          Body.setVelocity(b, { x: -vx * G.wallBounce, y: b.velocity.y });
+          Body.setAngularVelocity(b, -b.angularVelocity);
+        }
       }
       if (b.position.y + this.r >= H - 1.5) this.over();
       else if (b.position.x < -this.r * 3 || b.position.x > W + this.r * 3) this.over(true);

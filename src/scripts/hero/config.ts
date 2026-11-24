@@ -5,7 +5,7 @@
  */
 export const HERO_CONFIG = {
   word: 'NEIKOLI',
-  tagline: 'I build websites and systems that make businesses look as good as they are.',
+  tagline: 'I build websites that take orders, book clients and sell while you sleep.',
   hint: 'Grab the letters.',
 
   colors: {
@@ -86,7 +86,9 @@ export const HERO_CONFIG = {
     hintTouch: 'Hold under the ball to kick it up',
     swipeBoost: 0.55,        // how much of the mouse's speed (px/frame) goes into the ball
     maxSwipe: 90,            // cap on that speed, so one flick can launch it off screen but not to infinity
-    swipeMinSpeed: 6,        // px/frame: faster than this kicks from any side, not just from below
+    swipeMinSpeed: 6,
+    wallBreakSpeed: 30,      // px/frame: only a sideways hit faster than this escapes through the side walls
+    wallBounce: 0.7,         // speed kept after bouncing off a side wall        // px/frame: faster than this kicks from any side, not just from below
   },
 
   // Double-click / double-tap a letter to flip it and reveal a card.

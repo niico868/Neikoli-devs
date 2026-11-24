@@ -76,7 +76,7 @@ import { packages, carePlans, addOns, metaAds, ttd } from '../../data/site';
   .pkg { border: 1.5px solid var(--ink); border-radius: 6px; padding: 1.6rem; display: flex; flex-direction: column; gap: 1rem; background: var(--paper); }
   .pkg--top { background: var(--ink); color: var(--paper); }
   .pkg__name { margin: 0; font-size: var(--step--1); letter-spacing: .16em; text-transform: uppercase; }
-  .pkg__price { margin: .4rem 0 .3rem; font-family: var(--font-display); font-stretch: var(--font-display-stretch); font-weight: 900; font-size: clamp(2rem, 4vw, 2.8rem); line-height: 1; font-variant-numeric: tabular-nums; display: flex; align-items: baseline; gap: .4rem; }
+  .pkg__price { margin: .4rem 0 .3rem; font-family: var(--font-display); font-stretch: var(--font-display-stretch); font-weight: 900; font-size: clamp(2rem, 4vw, 2.8rem); line-height: 1; font-variant-numeric: tabular-nums; display: flex; flex-wrap: wrap; align-items: baseline; gap: .1rem .4rem; font-size: clamp(1.8rem, 3.2vw, 2.8rem); }
   .pkg__price small { font-family: var(--font-body); font-stretch: 100%; font-size: var(--step--1); font-weight: 500; opacity: .7; }
   .pkg--top .pkg__price span { color: var(--paper); }
   .pkg__tagline { margin: 0; color: var(--ink-2); }

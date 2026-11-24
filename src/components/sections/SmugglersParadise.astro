@@ -68,28 +68,32 @@ const panels = [
     position: relative; background: var(--ink); color: var(--paper);
     overflow: hidden;
   }
-  .sp__pin { min-height: 100svh; display: flex; flex-direction: column; justify-content: center; gap: clamp(1rem, 3vh, 2rem); padding: 5rem 0 3rem; }
+  .sp__pin { height: 100svh; min-height: 560px; display: flex; flex-direction: column; justify-content: center; gap: clamp(.6rem, 2vh, 1.5rem); padding: 4.2rem 0 1.5rem; box-sizing: border-box; }
   .sp__head { padding: 0 var(--gutter); }
   .sp__label { color: rgba(244, 241, 234, .6); }
-  :global(.sp__title) { font-size: clamp(2.2rem, 7.5vw, 7.5rem); line-height: .95; }
+  :global(.sp__title) { font-size: clamp(1.8rem, min(7vw, 8.5vh), 6.5rem); line-height: .95; }
   :global(.sp__title .kt__ch:nth-child(odd)) { color: var(--paper); }
   .sp__marquee { overflow: hidden; border-block: 1px solid rgba(244, 241, 234, .2); padding: .5rem 0; }
   .sp__marquee-track { display: flex; width: max-content; gap: 2rem; font-size: clamp(1rem, 2.2vw, 1.6rem); color: var(--accent); white-space: nowrap; will-change: transform; }
   .sp__marquee-track span { display: inline-flex; gap: 2rem; }
   .sp__marquee-track i { font-style: normal; color: var(--paper); }
-  .sp__track { display: flex; gap: clamp(1rem, 2vw, 2rem); padding: 0 var(--gutter); width: max-content; will-change: transform; }
+  .sp__track { flex: 0 1 auto; min-height: 0; align-items: flex-start; display: flex; gap: clamp(1rem, 2vw, 2rem); padding: 0 var(--gutter); width: max-content; will-change: transform; }
   .sp__panel {
-    width: min(78vw, 560px); flex: none;
+    width: min(82vw, 600px); flex: none; min-width: 0; overflow: hidden;
+    max-height: 100%;
     border: 1px solid rgba(244, 241, 234, .25); border-radius: 6px;
     padding: clamp(1.2rem, 2.5vw, 2rem); display: grid; gap: .8rem; align-content: start;
     background: rgba(244, 241, 234, .03);
   }
   .sp__num { font-size: var(--step--1); letter-spacing: .14em; color: rgba(244, 241, 234, .55); font-variant-numeric: tabular-nums; }
-  .sp__key { margin: 0; font-size: clamp(2.2rem, 6vw, 4.8rem); color: var(--paper); transform-origin: 0 100%; }
+  .sp__key { margin: 0; font-size: clamp(1.6rem, min(4.5vw, 6vh), 3.6rem); line-height: 1; white-space: nowrap; color: var(--paper); transform-origin: 0 100%; }
   .sp__line { margin: 0; color: rgba(244, 241, 234, .75); max-width: 36ch; }
   .sp__body { margin: 0; color: rgba(244, 241, 234, .85); max-width: 44ch; }
   .sp__line { font-weight: 600; }
-  .sp__grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: .5rem; }
+  @media (max-height: 700px) { .sp__body, .sp__line { font-size: var(--step--1); } .sp__panel { gap: .5rem; } }
+  .sp__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: .4rem; }
+  @media (max-width: 520px) { .sp__grid { grid-template-columns: repeat(2, 1fr); width: min(100%, 34vh); } }
+  @media (max-width: 520px) and (max-height: 720px) { .sp__grid { grid-template-columns: repeat(4, 1fr); width: 100%; } }
   .sp__grid img { width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; border-radius: 4px; background: #fff; }
   .sp__links { list-style: none; padding: 0; margin: 0; display: grid; gap: .4rem; }
   .sp__links a { color: var(--paper); text-decoration: none; border-bottom: 1px solid rgba(244, 241, 234, .3); padding-bottom: .15rem; }

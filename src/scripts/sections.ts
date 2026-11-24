@@ -146,7 +146,7 @@ function kineticWave(v: { smooth: number }) {
     ScrollTrigger.create({ trigger: title, start: 'top bottom', end: 'bottom top', onToggle: (s) => { visible = s.isActive; } });
     gsap.ticker.add((time) => {
       if (!visible) return;
-      const amp = Math.min(Math.abs(v.smooth) / 60, 26);
+      const amp = Math.min(Math.abs(v.smooth) / 80, 9);
       cs.forEach((_, i) => {
         const w = Math.sin(i * 0.7 + time * 9);
         ys[i](w * amp);
