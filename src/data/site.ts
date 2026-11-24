@@ -39,7 +39,7 @@ export interface Package { name: string; price: number; tagline: string; include
 
 export const packages: Package[] = [
   {
-    name: 'Basic', price: 4500, tagline: 'A sharp, custom site that does the essentials well.',
+    name: 'Basic', price: 4000, tagline: 'A sharp, custom site that does the essentials well.',
     includes: [
       '3 to 5 custom-designed pages, mobile and desktop friendly',
       'Domain setup and launch',

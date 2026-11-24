@@ -21,7 +21,7 @@ import { HERO_CONFIG as CFG } from '../../scripts/hero/config';
     <div class="hero__controls">
       <div class="hero__controls-inner">
         <button type="button" class="hero__btn" data-tilt hidden>Enable tilt</button>
-        <button type="button" class="hero__btn" data-reset>Reset</button>
+        <button type="button" class="hero__btn hero__btn--reset" data-reset><span aria-hidden="true">↺</span> Reset</button>
       </div>
     </div>
 
@@ -135,6 +135,7 @@ import { HERO_CONFIG as CFG } from '../../scripts/hero/config';
     font-size: var(--step--1); letter-spacing: .08em; text-transform: uppercase;
     text-decoration: underline; text-underline-offset: 4px; text-decoration-color: var(--line);
   }
+  .hero__btn--reset { text-decoration: none; border: 1.5px solid currentColor; border-radius: 999px; padding: .35em .95em; background: var(--paper); }
   .hero__btn:hover { color: var(--accent); text-decoration-color: currentColor; }
 
   /* Before the intro plays, the copy and controls wait offstage. */

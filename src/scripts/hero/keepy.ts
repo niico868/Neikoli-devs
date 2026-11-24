@@ -27,7 +27,7 @@ export class KeepyUppy {
   private r = 40;
   private count = 0;
   private lastKick = 0;
-  private foot: { id: number; x: number; y: number } | null = null;
+  private foot: { id: number; x: number; y: number; vx: number; vy: number; t: number; hover: boolean } | null = null;
   private store: ScoreStore = new LocalScoreStore(G.storageKey);
   private pending: Score | null = null;
   private lastTransform = '';
@@ -53,7 +53,7 @@ export class KeepyUppy {
     this.last = q('[data-hs-last]');
     this.form = q<HTMLFormElement>('[data-hs-form]');
     this.nameInput = q<HTMLInputElement>('#hs-name');
-    this.hint.textContent = G.hint;
+    this.hint.textContent = matchMedia('(hover: hover) and (pointer: fine)').matches ? G.hint : G.hintTouch;
 
     this.el = document.createElement('div');
     this.el.className = 'kick-ball';
@@ -90,8 +90,9 @@ export class KeepyUppy {
 
     this.ball = Bodies.circle(gsap.utils.clamp(this.r, W - this.r, x), -this.r * 2, this.r, {
       restitution: G.restitution, friction: 0.02, frictionAir: 0.006, density: 0.001,
-      // Only the screen edges stop the ball, so it can never come to rest on a letter.
-      collisionFilter: { mask: 0xffffffff ^ 0x0002 },
+      // The ball collides with nothing: it can fly over the top or off the sides.
+      // The floor is checked by position (it ends the game).
+      collisionFilter: { mask: 0 },
     });
     Body.setAngularVelocity(this.ball, gsap.utils.random(-0.06, 0.06));
     Composite.add(this.host.engine.world, this.ball);
@@ -120,10 +121,12 @@ export class KeepyUppy {
       if (f && now - this.lastKick > G.kickCooldownMs) {
         const dx = b.position.x - f.x, dy = b.position.y - f.y;
         const touching = Math.hypot(dx, dy) < this.r + G.footReach;
-        // The foot has to be under the ball, or at least level with its lower half.
-        if (touching && dy < this.r * 0.35) this.kick(dx, H);
+        const speed = Math.hypot(f.vx, f.vy);
+        // A slow foot has to be under the ball; a fast swipe hits it from any side.
+        if (touching && (dy < this.r * 0.35 || speed > G.swipeMinSpeed)) this.kick(dx, H);
       }
-      if (b.position.y + this.r >= H - 1.5 || b.position.x < -this.r * 3 || b.position.x > W + this.r * 3) this.over();
+      if (b.position.y + this.r >= H - 1.5) this.over();
+      else if (b.position.x < -this.r * 3 || b.position.x > W + this.r * 3) this.over(true);
     }
 
     const t = `translate3d(${(b.position.x - this.r).toFixed(1)}px,${(b.position.y - this.r).toFixed(1)}px,0) rotate(${b.angle.toFixed(3)}rad)`;
@@ -133,8 +136,13 @@ export class KeepyUppy {
   private kick(dx: number, H: number) {
     const b = this.ball!;
     const g = Math.max(0.4, Math.abs(this.host.engine.gravity.y)) * this.host.engine.gravity.scale * STEP * STEP;
-    const vy = -Math.sqrt(2 * g * G.kickHeight * H) * gsap.utils.random(0.92, 1.06);
-    const vx = gsap.utils.clamp(-G.kickSideways, G.kickSideways, (dx / this.r) * G.kickSideways + gsap.utils.random(-1, 1));
+    let vy = -Math.sqrt(2 * g * G.kickHeight * H) * gsap.utils.random(0.92, 1.06);
+    let vx = gsap.utils.clamp(-G.kickSideways, G.kickSideways, (dx / this.r) * G.kickSideways + gsap.utils.random(-1, 1));
+    // Add the foot's own speed: a fast flick sends it much further, even off screen.
+    const f = this.foot!;
+    const sp = Math.hypot(f.vx, f.vy), cap = sp > G.maxSwipe ? G.maxSwipe / sp : 1;
+    vx += f.vx * cap * G.swipeBoost;
+    vy += Math.min(0, f.vy * cap * G.swipeBoost);
     Sleeping.set(b, false);
     Body.setVelocity(b, { x: vx, y: vy });
     Body.setAngularVelocity(b, vx * 0.02 + gsap.utils.random(-0.05, 0.05));
@@ -147,7 +155,7 @@ export class KeepyUppy {
     if (this.count === 1) gsap.to(this.hint, { autoAlpha: 0, duration: 0.3, onComplete: () => { this.hint.hidden = true; } });
   }
 
-  private async over() {
+  private async over(outOfPark = false) {
     this.phase = 'over';
     this.root.classList.remove('is-playing');
     this.foot = null;
@@ -159,7 +167,7 @@ export class KeepyUppy {
     const score = this.count;
     const top = await this.store.top(G.maxScores);
     const best = top[0]?.score ?? 0;
-    this.last.textContent = score === 1 ? 'You kept it up for 1 kick.' : `You kept it up for ${score} kicks.`;
+    this.last.textContent = (outOfPark ? 'Out of the park! ' : '') + (score === 1 ? 'You kept it up for 1 kick.' : `You kept it up for ${score} kicks.`);
     if (qualifies(top, score, G.maxScores)) {
       this.pending = { name: '', score, at: Date.now() };
       this.form.hidden = false;
@@ -239,21 +247,43 @@ export class KeepyUppy {
       const r = stage.getBoundingClientRect();
       return { x: e.clientX - r.left, y: e.clientY - r.top };
     };
+    /** Track position and a smoothed speed in px per 60fps frame. */
+    const move = (e: PointerEvent) => {
+      const f = this.foot!; const p = toLocal(e); const now = performance.now();
+      const dt = Math.max(1, now - f.t) / STEP;
+      f.vx = f.vx * 0.4 + ((p.x - f.x) / dt) * 0.6;
+      f.vy = f.vy * 0.4 + ((p.y - f.y) / dt) * 0.6;
+      f.x = p.x; f.y = p.y; f.t = now;
+    };
+    const newFoot = (e: PointerEvent, hover: boolean) => ({ id: e.pointerId, ...toLocal(e), vx: 0, vy: 0, t: performance.now(), hover });
+
+    // Mouse: just moving it is the foot. No click needed.
+    stage.addEventListener('pointermove', (e) => {
+      if (this.phase !== 'playing') return;
+      if (e.pointerType === 'mouse') {
+        if (!this.foot) this.foot = newFoot(e, true);
+        move(e);
+        return;
+      }
+      if (!this.foot || e.pointerId !== this.foot.id) return;
+      move(e);
+      this.placeFoot();
+    });
+    stage.addEventListener('pointerleave', (e) => {
+      if (this.foot?.hover && e.pointerType === 'mouse') this.foot = null;
+    });
+
+    // Touch and pen: hold a finger under the ball.
     stage.addEventListener('pointerdown', (e) => {
-      if (this.phase !== 'playing' || this.foot) return;
+      if (e.pointerType === 'mouse' || this.phase !== 'playing' || this.foot) return;
       if ((e.target as HTMLElement).closest('.letter, button, a, input, .hs, .hero__card')) return;
       e.preventDefault();
       stage.setPointerCapture(e.pointerId);
-      this.foot = { id: e.pointerId, ...toLocal(e) };
-      this.placeFoot();
-    });
-    stage.addEventListener('pointermove', (e) => {
-      if (!this.foot || e.pointerId !== this.foot.id) return;
-      Object.assign(this.foot, toLocal(e));
+      this.foot = newFoot(e, false);
       this.placeFoot();
     });
     const up = (e: PointerEvent) => {
-      if (!this.foot || e.pointerId !== this.foot.id) return;
+      if (!this.foot || this.foot.hover || e.pointerId !== this.foot.id) return;
       this.foot = null;
       this.footEl.hidden = true;
     };

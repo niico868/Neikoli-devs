@@ -19,6 +19,13 @@ import { work } from '../../data/site';
             <span class="work__kind">{w.kind}</span>
             {w.status === 'in-progress' && <span class="badge"><i aria-hidden="true"></i>Live, in progress</span>}
           </div>
+          {w.status === 'live' && (
+            <a class="shots" href={w.url} target="_blank" rel="noopener" aria-label={`Open ${w.name} (new tab)`} data-shots>
+              <div class="shots__laptop"><div class="browser__bar"><span></span><span></span><span></span><em>{w.url?.replace('https://', '')}</em></div>
+                <img src={`/images/work/${w.slug}-desktop.webp`} alt={`${w.name} on a laptop`} width="1200" height="750" loading="lazy" decoding="async" /></div>
+              <div class="shots__phone"><img src={`/images/work/${w.slug}-mobile.webp`} alt={`${w.name} on a phone`} width="520" height="1126" loading="lazy" decoding="async" /></div>
+            </a>
+          )}
           {w.status === 'in-progress' && (
             <div class="work__live">
               {w.liveUrl
@@ -64,11 +71,23 @@ import { work } from '../../data/site';
   .browser__bar em { font-style: normal; font-size: var(--step--1); color: var(--ink-2); margin-left: .5rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .browser iframe { width: 100%; aspect-ratio: 16 / 9; border: 0; display: block; }
   .browser--empty p { margin: 0; padding: 2.5rem 1.2rem; text-align: center; color: var(--ink-2); font-size: var(--step--1); }
+  /* Real screens of each live site: a laptop with a phone leaning on it. */
+  .shots { grid-column: 2 / -1; position: relative; display: block; padding: 0 9% 6% 0; margin-top: .4rem; perspective: 1400px; }
+  .shots__laptop { border: 1.5px solid var(--ink); border-radius: 10px; overflow: hidden; background: #fff; box-shadow: 0 30px 60px -30px rgba(0,0,0,.45);
+    transform: rotateX(4deg) rotateY(-6deg); transform-origin: 50% 100%; transition: transform .8s var(--ease-out); }
+  .shots__laptop img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; object-position: top; }
+  .shots__phone { position: absolute; right: 0; bottom: 0; width: 24%; border: 5px solid var(--ink); border-radius: 22px; overflow: hidden; background: var(--ink);
+    box-shadow: 0 24px 40px -16px rgba(0,0,0,.55); transform: rotate(4deg) translateY(8%); transition: transform .8s var(--ease-out); }
+  .shots__phone img { display: block; width: 100%; height: auto; aspect-ratio: 9 / 19.5; object-fit: cover; object-position: top; }
+  .shots:hover .shots__laptop, .shots:focus-visible .shots__laptop { transform: rotateX(0) rotateY(0) translateY(-6px); }
+  .shots:hover .shots__phone, .shots:focus-visible .shots__phone { transform: rotate(0deg) translateY(-4%); }
   @media (max-width: 640px) {
+    .shots { grid-column: 1 / -1; padding-right: 14%; }
+    .shots__phone { width: 30%; border-width: 4px; border-radius: 16px; }
     .work__item { grid-template-columns: 2rem minmax(0, 1fr); }
     .work__side { grid-column: 2; justify-items: start; }
     .work__kind { text-align: left; }
     .work__live { grid-column: 1 / -1; }
   }
-  @media (prefers-reduced-motion: reduce) { .badge i { animation: none; } }
+  @media (prefers-reduced-motion: reduce) { .badge i { animation: none; } .shots__laptop, .shots__phone { transition: none; } }
 </style>

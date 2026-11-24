@@ -168,7 +168,7 @@ function services() {
     const o = { n: 0 };
     gsap.to(o, {
       n: target, duration: 1.4, ease: 'power3.out',
-      onUpdate: () => { el.textContent = '$' + Math.min(target, Math.round(o.n / 50) * 50).toLocaleString('en-US'); },
+      onUpdate: () => { el.textContent = 'TT$' + Math.min(target, Math.round(o.n / 50) * 50).toLocaleString('en-US'); },
       scrollTrigger: { trigger: el, start: 'top 90%', once: true },
     });
   });

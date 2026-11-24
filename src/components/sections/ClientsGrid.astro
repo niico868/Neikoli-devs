@@ -16,7 +16,7 @@ import { clients } from '../../data/site';
             <h3 class="client__name">{c.name}</h3>
             <p class="client__desc">{c.descriptor}</p>
             {c.url
-              ? <a class="client__cta" href={c.url} target="_blank" rel="noopener">View <span aria-hidden="true">→</span><span class="sr-only"> {c.name} (opens in a new tab)</span></a>
+              ? <a class="client__cta" href={c.url} target="_blank" rel="noopener">Visit site <span aria-hidden="true">↗</span><span class="sr-only"> {c.name} (opens in a new tab)</span></a>
               : <span class="client__cta client__cta--soon">Site coming soon</span>}
           </div>
         </li>
@@ -64,6 +64,11 @@ import { clients } from '../../data/site';
   }
   .client__name { margin: 0; font-size: var(--step-1); font-weight: 700; line-height: 1.1; letter-spacing: -0.01em; }
   .client__desc { margin: 0; font-size: var(--step--1); line-height: 1.45; color: var(--c-text-2); }
+  /* The View link stretches over the whole card, so tapping anywhere opens the client's site. */
+  a.client__cta::after { content: ''; position: absolute; inset: 0; z-index: 2; border-radius: 10px; }
+  .client:has(a.client__cta) { cursor: pointer; }
+  a.client__cta:focus-visible { outline: none; }
+  .client:has(a.client__cta:focus-visible) { outline: 2px solid #e0464c; outline-offset: 3px; }
   .client__cta {
     align-self: flex-start; margin-top: .4rem; font-size: var(--step--1); font-weight: 600;
     color: var(--c-text); text-decoration: none; border-bottom: 1px solid currentColor; padding-bottom: .1em;
@@ -84,7 +89,7 @@ import { clients } from '../../data/site';
   @media (hover: none) {
     .client { aspect-ratio: auto; display: flex; flex-direction: column; }
     .client__logo { position: relative; inset: auto; aspect-ratio: 4 / 3; }
-    .client__info { position: relative; inset: auto; opacity: 1; transform: none; background: none; padding-top: 0; }
+    .client__info { position: static; inset: auto; opacity: 1; transform: none; background: none; padding-top: 0; }
   }
 
   @media (max-width: 900px) {
