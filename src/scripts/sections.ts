@@ -86,6 +86,9 @@ function workRows() {
   gsap.utils.toArray<HTMLElement>('[data-work-row]').forEach((row, i) => {
     gsap.from(row, {
       x: i % 2 ? 80 : -80, autoAlpha: 0, duration: 1, ease: 'power4.out',
+      // Drop the leftover transform: it would make each row its own layer and let a
+      // later row paint over the phone hanging off the row above it.
+      clearProps: 'transform,opacity,visibility',
       scrollTrigger: { trigger: row, start: 'top 88%', once: true },
     });
   });
