@@ -2,7 +2,7 @@
 // The small top-left logo is where the hero word docks on scroll.
 ---
 <header class="site-header">
-  <a href="#top" class="site-logo display" data-dock-target aria-label="Neikoli, back to top">NEIKOLI</a>
+  <a href="#top" class="site-logo display" aria-label="Neikoli builds, back to top"><span class="site-logo__word" data-dock-target>NEIKOLI</span><span class="site-logo__builds" data-dock-builds aria-hidden="true">BUILDS</span></a>
   <nav aria-label="Main">
     <a href="#work">Work</a>
     <a href="#services">Services</a>
@@ -19,12 +19,50 @@
   }
   .site-header > * { pointer-events: auto; }
   .site-logo {
-    font-size: 1.05rem; text-decoration: none; letter-spacing: 0; line-height: 1; display: block;
-    opacity: 0; /* revealed when the hero word docks */
+    font-size: 1.05rem; text-decoration: none; letter-spacing: 0; line-height: 1; display: flex; gap: .32em; white-space: nowrap;
   }
-  :global(.reduced-motion) .site-logo, :global(html:not(.js)) .site-logo { opacity: 1; }
+  /* Both parts are revealed when the hero word docks: NEIKOLI lands, then BUILDS slides out of it. */
+  .site-logo__word, .site-logo__builds { display: inline-block; opacity: 0; }
+  .site-logo__builds { color: var(--accent); }
+  :global(.reduced-motion) .site-logo > span, :global(html:not(.js)) .site-logo > span { opacity: 1; }
   nav { display: flex; gap: clamp(.8rem, 2vw, 1.8rem); font-size: var(--step--1); font-weight: 500; }
   nav a { text-decoration: none; }
   .site-header__cta { color: var(--accent); }
   @media (max-width: 520px) { nav a:not(.site-header__cta) { display: none; } }
+
+  /* Each header item flips to a contrasting colour over dark backgrounds (set by the script below). */
+  .site-header a, .site-header a > span { transition: color .35s ease; }
+  .site-header :global(.on-dark) { color: #f4f1ea; }
+  .site-header :global(.site-header__cta.on-dark) { color: #ff7a7e; }
+  .site-header :global(.site-logo__builds.on-dark) { color: #ff7a7e; }
 </style>
+<script>
+  // Look at what sits behind each header item and pick light or dark text to match.
+  const items = [...document.querySelectorAll<HTMLElement>('.site-header nav a, .site-logo__word, .site-logo__builds')];
+  const header = document.querySelector<HTMLElement>('.site-header')!;
+  const bgOf = (el: Element | null): number[] | null => {
+    for (; el; el = el.parentElement) {
+      const c = getComputedStyle(el).backgroundColor.match(/[\d.]+/g)?.map(Number);
+      if (c && (c[3] === undefined || c[3] > 0.5)) return c;
+    }
+    return null;
+  };
+  const isDark = (c: number[]) => (0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]) / 255 < 0.5;
+  let queued = false;
+  const check = () => {
+    queued = false;
+    header.style.visibility = 'hidden'; // look through the header itself
+    for (const el of items) {
+      const r = el.getBoundingClientRect();
+      if (!r.width) continue;
+      const under = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+      const bg = bgOf(under);
+      el.classList.toggle('on-dark', !!bg && isDark(bg));
+    }
+    header.style.visibility = '';
+  };
+  const queue = () => { if (!queued) { queued = true; requestAnimationFrame(check); } };
+  addEventListener('scroll', queue, { passive: true });
+  addEventListener('resize', queue);
+  queue();
+</script>

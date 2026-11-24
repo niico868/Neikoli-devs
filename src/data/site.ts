@@ -109,7 +109,7 @@ export interface Client {
 /** Clients grid: first three fill the top row, last two sit centred underneath. */
 export const clients: Client[] = [
   {
-    name: 'Nexus Forge', logo: '/images/clients/nexus-forge.webp', url: 'https://neikoli.com', halo: true,
+    name: 'Nexus Forge', logo: '/images/clients/nexus-forge.webp', url: 'https://neikoli.com',
     descriptor: 'Where the dream took form. Years of quiet conviction — that the highest version of this work lives at the intersection of code, creativity, and freedom. Building toward a life designed entirely on its own terms.',
   },
   {

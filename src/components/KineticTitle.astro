@@ -26,5 +26,7 @@ const words = text.split(' ');
   .kt__inner { display: inline; }
   .kt__word { display: inline-block; white-space: nowrap; margin-right: .28em; }
   .kt__word:last-child { margin-right: 0; }
+  /* Wave titles reveal letters from behind each word's own edge, so nothing spills onto the copy below. */
+  :global([data-kinetic="wave"]) .kt__word { overflow: clip; overflow-clip-margin: .12em; padding-block: .06em; }
   .kt__ch { display: inline-block; transform-origin: 50% 100%; will-change: transform; }
 </style>

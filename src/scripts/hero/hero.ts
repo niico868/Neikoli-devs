@@ -653,6 +653,8 @@ export class Hero {
         duration: 0.34, ease: 'power3.inOut',
       }, 0.56)
       .to(logo, { opacity: 1, duration: 0.04 }, 0.92)
+      .fromTo('[data-dock-builds]', { opacity: 0, x: -14, clipPath: 'inset(0 100% 0 0)' },
+        { opacity: 1, x: 0, clipPath: 'inset(0 0% 0 0)', duration: 0.05, ease: 'power3.out' }, 0.93)
       .to(this.wordEl, { opacity: 0, duration: 0.04 }, 0.92)
       .to({}, { duration: 0.04 }, 0.96); // hold, while the next section rises over the stage
   }
