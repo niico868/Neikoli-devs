@@ -1,11 +1,34 @@
 ---
 import KineticTitle from '../KineticTitle.astro';
 const panels = [
-  { key: 'Designs', line: 'The graphics, garments and marks that made the brand.', todo: 'Add design images' },
-  { key: 'Content', line: 'Photo, video and social work that carried it.', todo: 'Add content pieces' },
-  { key: 'Ethos', line: 'What the brand stands for, in its own words.', todo: 'Add the ethos statement' },
-  { key: 'Story', line: 'How it started and where it is going.', todo: 'Add the brand story' },
-];
+  {
+    key: 'Designs', line: 'Ultra heavyweight tees, printed to order. Every drop is limited.',
+    images: [
+      { src: '/images/sp/frtb-tee-gold-front.webp', alt: '11/11 FRTB oversized tee, front' },
+      { src: '/images/sp/frtb-tee-gold-back.webp', alt: '11/11 FRTB oversized tee, back print' },
+      { src: '/images/sp/sovereignty-front.webp', alt: 'Sovereignty tee, front' },
+      { src: '/images/sp/sovereignty-back.webp', alt: 'Sovereignty tee, back print' },
+    ],
+    links: [{ label: 'Shop the drops', href: 'https://smugpara.com/shop' }],
+  },
+  {
+    key: 'Content', line: 'The drops, the fits and the studio, told on social.',
+    links: [
+      { label: 'Instagram · @smugglerparadise', href: 'https://www.instagram.com/smugglerparadise/' },
+      { label: 'TikTok · @smugglerparadise', href: 'https://www.tiktok.com/@smugglerparadise' },
+      { label: 'Design your own tee', href: 'https://smugpara.com/design' },
+    ],
+  },
+  {
+    key: 'Ethos', line: 'Faith Rewards The Brave.',
+    body: 'Risk and freedom are the whole point. Every piece is made for people who back themselves: brave, sovereign, unbothered. The Baddest Brand In The Tropics.',
+  },
+  {
+    key: 'Story', line: 'Born on the beaches of Trinidad and Tobago.',
+    body: 'Smuggler’s Paradise started as streetwear from T&T and grew into its own storefront with a design studio, where anyone can build a tee and have it printed to order. I designed the brand and built the site and the studio myself.',
+    links: [{ label: 'Visit smugpara.com', href: 'https://smugpara.com' }],
+  },
+] as { key: string; line: string; body?: string; images?: { src: string; alt: string }[]; links?: { label: string; href: string }[] }[];
 ---
 <section id="smugglers-paradise" class="sp" aria-labelledby="sp-title" data-sp>
   <div class="sp__pin" data-sp-pin>
@@ -24,7 +47,17 @@ const panels = [
           <span class="sp__num">{String(i + 1).padStart(2, '0')} / 04</span>
           <h3 class="sp__key display" data-sp-key>{p.key}</h3>
           <p class="sp__line">{p.line}</p>
-          <div class="sp__slot"><span>{p.todo}</span></div>
+          {p.body && <p class="sp__body">{p.body}</p>}
+          {p.images && (
+            <div class="sp__grid">
+              {p.images.map((im) => <img src={im.src} alt={im.alt} width="450" height="450" loading="lazy" decoding="async" />)}
+            </div>
+          )}
+          {p.links && (
+            <ul class="sp__links" role="list">
+              {p.links.map((l) => <li><a href={l.href} target="_blank" rel="noopener">{l.label} <span aria-hidden="true">↗</span></a></li>)}
+            </ul>
+          )}
         </article>
       ))}
     </div>
@@ -54,11 +87,13 @@ const panels = [
   .sp__num { font-size: var(--step--1); letter-spacing: .14em; color: rgba(244, 241, 234, .55); font-variant-numeric: tabular-nums; }
   .sp__key { margin: 0; font-size: clamp(2.2rem, 6vw, 4.8rem); color: var(--paper); transform-origin: 0 100%; }
   .sp__line { margin: 0; color: rgba(244, 241, 234, .75); max-width: 36ch; }
-  .sp__slot {
-    aspect-ratio: 4 / 3; max-width: 100%; border: 1px dashed rgba(244, 241, 234, .3); border-radius: 4px;
-    display: grid; place-items: center; text-align: center; padding: 1rem;
-    font-size: var(--step--1); color: rgba(244, 241, 234, .5);
-  }
+  .sp__body { margin: 0; color: rgba(244, 241, 234, .85); max-width: 44ch; }
+  .sp__line { font-weight: 600; }
+  .sp__grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: .5rem; }
+  .sp__grid img { width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; border-radius: 4px; background: #fff; }
+  .sp__links { list-style: none; padding: 0; margin: 0; display: grid; gap: .4rem; }
+  .sp__links a { color: var(--paper); text-decoration: none; border-bottom: 1px solid rgba(244, 241, 234, .3); padding-bottom: .15rem; }
+  .sp__links a:hover { color: var(--accent); border-color: var(--accent); }
   /* Without motion the panels simply wrap. */
   :global(html.reduced-motion) .sp__track, :global(html:not(.js)) .sp__track { width: auto; flex-wrap: wrap; }
   :global(html.reduced-motion) .sp__panel, :global(html:not(.js)) .sp__panel { width: min(100%, 520px); }

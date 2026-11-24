@@ -8,10 +8,10 @@ import { work } from '../../data/site';
     <KineticTitle id="work-title" text="Selected work" mode="snap" class="work__title" />
     <ul class="work__list" role="list">
       {work.map((w, i) => (
-        <li class="work__item" id={w.slug === 'brussels' ? 'brussels' : undefined} data-work-row>
+        <li class="work__item" id={w.status === 'in-progress' ? 'live-build' : undefined} data-work-row>
           <span class="work__n">{String(i + 1).padStart(2, '0')}</span>
           <div class="work__main">
-            <h3 class="work__name">{w.name}</h3>
+            <h3 class="work__name">{w.url ? <a href={w.url} target="_blank" rel="noopener">{w.name} <span aria-hidden="true">↗</span></a> : w.name}</h3>
             <p class="work__summary">{w.summary}</p>
             <ul class="work__tags" role="list">{w.tags.map((t) => <li>{t}</li>)}</ul>
           </div>
@@ -22,14 +22,13 @@ import { work } from '../../data/site';
           {w.status === 'in-progress' && (
             <div class="work__live">
               {w.liveUrl
-                ? <div class="browser"><div class="browser__bar"><span></span><span></span><span></span><em>{w.liveUrl}</em></div><iframe src={w.liveUrl} title={`${w.name} live build`} loading="lazy"></iframe></div>
-                : <div class="browser browser--empty"><div class="browser__bar"><span></span><span></span><span></span><em>brussels-apparel (build link to come)</em></div><p>The live build appears here once its preview link is added in <code>src/data/site.ts</code>.</p></div>}
+                ? <div class="browser"><div class="browser__bar"><span></span><span></span><span></span><em><a href={w.liveUrl} target="_blank" rel="noopener">{w.liveUrl.replace('https://', '')} ↗</a></em></div><iframe src={w.liveUrl} title={`${w.name} live build`} loading="lazy"></iframe></div>
+                : <div class="browser browser--empty"><div class="browser__bar"><span></span><span></span><span></span><em>build link to come</em></div><p>The live build appears here once its preview link is added in <code>src/data/site.ts</code>.</p></div>}
             </div>
           )}
         </li>
       ))}
     </ul>
-    <p class="placeholder-note">Screens and case notes for each project come with your images.</p>
   </div>
 </section>
 <style>
@@ -42,6 +41,9 @@ import { work } from '../../data/site';
   }
   .work__item:hover { background: var(--paper-2); }
   .work__n { color: var(--accent); font-size: var(--step--1); font-weight: 600; padding-top: .5rem; font-variant-numeric: tabular-nums; }
+  .work__name a { color: inherit; text-decoration: none; }
+  .work__name a:hover { color: var(--accent); }
+  .browser__bar em a { color: inherit; }
   .work__name { margin: 0; font-size: var(--step-2); font-weight: 700; line-height: 1.1; letter-spacing: -0.01em; }
   .work__summary { margin: .5rem 0 .8rem; color: var(--ink-2); max-width: 52ch; }
   .work__tags { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: .4rem; }
