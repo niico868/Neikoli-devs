@@ -1,0 +1,9 @@
+{
+  // Cloudflare Workers static-assets deploy for neikoli.com (Astro static build).
+  "name": "neikoli-devs",
+  "compatibility_date": "2026-11-24",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page"
+  }
+}
