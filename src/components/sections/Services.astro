@@ -1,19 +1,19 @@
 ---
 import KineticTitle from '../KineticTitle.astro';
-import { packages, carePlans, addOns, metaAds, usd, ttd } from '../../data/site';
+import { packages, carePlans, addOns, metaAds, ttd } from '../../data/site';
 ---
-<section id="services" class="section services" aria-labelledby="services-title">
+<section id="services" class="section services" aria-labelledby="services-title" data-cur-scope="ttd">
   <div class="wrap">
     <p class="section__label"><span>05</span> / Services and pricing</p>
     <KineticTitle id="services-title" text="Prices, out in the open." mode="snap" class="services__title" accentLast />
-    <p class="services__intro">Every build is quoted by package, in US dollars. The one-time SEO setup is included in every build.</p>
+    <p class="services__intro">Every build is quoted by package, in Trinidad and Tobago dollars. The one-time SEO setup is included in every build.</p>
 
     <div class="pkgs">
       {packages.map((p, i) => (
         <article class:list={['pkg', { 'pkg--top': i === packages.length - 1 }]} data-pkg>
           <header>
             <h3 class="pkg__name">{p.name}</h3>
-            <p class="pkg__price"><span data-count={p.price}>{usd(p.price)}</span><small>USD</small></p>
+            <p class="pkg__price"><span data-count={p.price}>{ttd(p.price)}</span><small>TTD</small></p>
             <p class="pkg__tagline">{p.tagline}</p>
           </header>
           <ul class="pkg__list">{p.includes.map((x) => <li>{x}</li>)}</ul>
@@ -37,12 +37,18 @@ import { packages, carePlans, addOns, metaAds, usd, ttd } from '../../data/site'
     </div>
 
     <div class="block">
-      <h3 class="block__title">Add-ons</h3>
-      <p class="block__intro">Any service can be added to any plan for a monthly fee. A service bought on its own always costs more than it does inside a plan. TTD prices are approximate, at about TT$6.8 to US$1.</p>
+      <div class="block__head">
+        <h3 class="block__title">Add-ons</h3>
+        <div class="cur" role="group" aria-label="Currency" data-cur>
+          <button type="button" aria-pressed="true" data-cur-btn="ttd">TTD</button>
+          <button type="button" aria-pressed="false" data-cur-btn="usd">USD</button>
+        </div>
+      </div>
+      <p class="block__intro">Any service can be added to any plan for a monthly fee. A service bought on its own always costs more than it does inside a plan. USD prices are at about TT$6.8 to US$1.</p>
       <div class="table-scroll">
         <table class="addons">
-          <thead><tr><th scope="col">Service</th><th scope="col">USD / month</th><th scope="col">About TTD / month</th><th scope="col">What it is</th></tr></thead>
-          <tbody>{addOns.map((a) => <tr><th scope="row">{a.name}</th><td>{a.usd}</td><td>{a.ttd}</td><td>{a.what}</td></tr>)}</tbody>
+          <thead><tr><th scope="col">Service</th><th scope="col">Price / month</th><th scope="col">What it is</th></tr></thead>
+          <tbody>{addOns.map((a) => <tr><th scope="row">{a.name}</th><td><span class="c-ttd">{a.ttd}</span><span class="c-usd">{a.usd}</span></td><td>{a.what}</td></tr>)}</tbody>
         </table>
       </div>
     </div>
@@ -54,7 +60,7 @@ import { packages, carePlans, addOns, metaAds, usd, ttd } from '../../data/site'
         {metaAds.map((m) => (
           <article class="ad">
             <h4>{m.name}</h4>
-            <p class="ad__price">{m.usd} <small>· {m.ttd} / month</small></p>
+            <p class="ad__price"><span class="c-ttd">{m.ttd}</span><span class="c-usd">{m.usd}</span> <small>/ month</small></p>
             <p>{m.what}</p>
             <p class="ad__hours">{m.hours}</p>
           </article>
@@ -91,12 +97,20 @@ import { packages, carePlans, addOns, metaAds, usd, ttd } from '../../data/site'
   .care__price small { font-size: var(--step--1); font-weight: 500; color: var(--ink-2); }
   .care p { margin: .4rem 0 0; font-size: var(--step--1); color: var(--ink-2); }
 
+  .block__head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: .4rem; }
+  .block__head .block__title { margin: 0; }
+  .cur { display: inline-flex; border: 1.5px solid var(--ink); border-radius: 999px; padding: 3px; }
+  .cur button { font: inherit; font-size: var(--step--1); font-weight: 600; border: 0; background: none; color: var(--ink); padding: .3em .9em; border-radius: 999px; cursor: pointer; transition: background .25s, color .25s; }
+  .cur button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+  .c-usd { display: none; }
+  .services[data-cur-scope="usd"] .c-usd { display: inline; }
+  .services[data-cur-scope="usd"] .c-ttd { display: none; }
   .table-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 6px; }
-  .addons { width: 100%; min-width: 640px; border-collapse: collapse; font-size: var(--step--1); }
+  .addons { width: 100%; min-width: 560px; border-collapse: collapse; font-size: var(--step--1); }
   .addons th, .addons td { text-align: left; padding: .8rem 1rem; border-bottom: 1px solid var(--line); vertical-align: top; }
   .addons thead th { font-size: .75rem; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-2); font-weight: 600; background: var(--paper-2); }
   .addons tbody th { font-weight: 700; white-space: nowrap; }
-  .addons td:nth-child(2), .addons td:nth-child(3) { white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .addons td:nth-child(2) { white-space: nowrap; font-variant-numeric: tabular-nums; }
   .addons tr:last-child th, .addons tr:last-child td { border-bottom: 0; }
 
   .ads { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 1rem; }
@@ -107,3 +121,12 @@ import { packages, carePlans, addOns, metaAds, usd, ttd } from '../../data/site'
   .ad p { margin: 0 0 .6rem; font-size: var(--step--1); }
   .ad__hours { color: var(--ink-2); margin-bottom: 0 !important; }
 </style>
+<script>
+  // TTD by default; the switch flips every add-on and Meta ads price to USD.
+  const scope = document.querySelector<HTMLElement>('#services');
+  document.querySelectorAll<HTMLButtonElement>('[data-cur-btn]').forEach((b) => b.addEventListener('click', () => {
+    const cur = b.dataset.curBtn!;
+    scope?.setAttribute('data-cur-scope', cur);
+    document.querySelectorAll<HTMLButtonElement>('[data-cur-btn]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+  }));
+</script>

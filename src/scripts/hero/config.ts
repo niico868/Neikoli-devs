@@ -37,7 +37,7 @@ export const HERO_CONFIG = {
     density: 0.0018,
     throwBoost: 1.0,         // multiplies the release velocity of a thrown letter
     knockLooseSpeed: 4.5,    // a hit faster than this frees a resting letter
-    returnDelayMs: 3000,     // idle time before letters float home
+    returnDelayMs: 25000,    // idle time before knocked letters float home (Reset brings them back now)
     returnMs: 1300,          // length of the trip home
     returnEase: 'elastic.out(1, 0.55)',
     wallThickness: 200,
@@ -82,7 +82,11 @@ export const HERO_CONFIG = {
     restitution: 0.55,
     maxScores: 10,           // only the top 10 are kept and shown
     storageKey: 'neikoli:keepy-uppy:v1',
-    hint: 'Hold under the ball to kick it up',
+    hint: 'Move your mouse into the ball to kick it',
+    hintTouch: 'Hold under the ball to kick it up',
+    swipeBoost: 0.55,        // how much of the mouse's speed (px/frame) goes into the ball
+    maxSwipe: 90,            // cap on that speed, so one flick can launch it off screen but not to infinity
+    swipeMinSpeed: 6,        // px/frame: faster than this kicks from any side, not just from below
   },
 
   // Double-click / double-tap a letter to flip it and reveal a card.
